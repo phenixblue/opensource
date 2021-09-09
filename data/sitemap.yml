@@ -21,15 +21,15 @@ navigation:
         class: "privacy"
   social:
     links:
-      - icon: fa-slack
-        href: "https://tmo-oss-getinvite.herokuapp.com/"
-        class: "slack"
+      # - icon: fa-slack
+      #   href: ""
+      #   class: "slack"
       # - icon: fa-twitter
       #   href: "https://twitter.com/TMobile87733446"
       #   class: "twitter"
       # - icon: fa-facebook squared
       #   href: "https://www.facebook.com"
       #   class: "facebook"
-      - icon: fa-youtube
-        href: "https://www.youtube.com/playlist?list=PL0mz2nejZ-DgH0XsbYDrKPbeMiEJYWqUg"
-        class: "youtube"
+      # - icon: fa-youtube
+      #  href: "https://www.youtube.com/playlist?list=PL0mz2nejZ-DgH0XsbYDrKPbeMiEJYWqUg"
+      #  class: "youtube"
