@@ -1,4 +1,4 @@
-# Contribution Guidelines
+# Contributing Guide
 
 This document is meant to be used as a guide for anyone interested in contributing to T-Mobile Opensource Website. We are always interested and are on the lookout for folks who are open and willing to write technical articles.
 
