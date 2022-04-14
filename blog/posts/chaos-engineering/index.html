@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="author" content="T-Mobile">
 <meta name="description" content="Open source at the Un-carrier.">
-<meta name="generator" content="Hugo 0.84.4" />
+<meta name="generator" content="Hugo 0.96.0" />
 <title>T-Mobile Open Source</title>
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32" />
@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css" type="text/css" />
 
 <!-- Custom Fonts -->
-<link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" type="text/css" />
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' />
 <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css' />
 
@@ -145,7 +145,7 @@
 <p>Our goal, was to be able to take an organization name, space name, and application name in our Cloud Foundry environment, and then block either access to that application, or that application&rsquo;s access to one or more of its bound services.</p>
 <h2 id="early-work-with-turbulence">Early Work With Turbulence</h2>
 <p>We started off experimenting with Turbulence as a way to perform experiments, however, it is infrastructure oriented. Working with Turbulence offered valuable experience regarding where we should focus our attacks, and how we should go about application targeted attacks.</p>
-<pre><code class="language-ascii" data-lang="ascii">+----------------------------------------------------------------------------------------------------+
+<pre tabindex="0"><code class="language-ascii" data-lang="ascii">+----------------------------------------------------------------------------------------------------+
 |Bosh-Lite VM                                                                                        |
 |      +--------------------------------------------------------+                                    |       +--------------------------------------+
 |     +-------------------------------------------------------+ |         +-----------------------+  |       |Web-Browser                           |
@@ -203,36 +203,36 @@
 <p>Query a diego-cell for information about what containers host the application.<br>
 <code>bosh -d cf ssh diego-cell/0</code><br>
 <code>cfdot actual-lrp-groups | grep &lt;guid&gt; | jq</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
-  <span style="color:#f92672">&#34;instance&#34;</span>: {
-    <span style="color:#f92672">&#34;process_guid&#34;</span>: <span style="color:#e6db74">&#34;&lt;REDACTED&gt;&#34;</span>,
-      <span style="color:#f92672">&#34;index&#34;</span>: <span style="color:#ae81ff">0</span>,
-      <span style="color:#f92672">&#34;domain&#34;</span>: <span style="color:#e6db74">&#34;cf-apps&#34;</span>,
-      <span style="color:#f92672">&#34;instance_guid&#34;</span>: <span style="color:#e6db74">&#34;&lt;REDACTED&gt;&#34;</span>,
-      <span style="color:#f92672">&#34;cell_id&#34;</span>: <span style="color:#e6db74">&#34;&lt;REDACTED&gt;&#34;</span>,
-      <span style="color:#f92672">&#34;address&#34;</span>: <span style="color:#e6db74">&#34;192.144.0.140&#34;</span>,      <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#960050;background-color:#1e0010">The</span> <span style="color:#960050;background-color:#1e0010">diego-cell</span> <span style="color:#960050;background-color:#1e0010">VM</span> <span style="color:#960050;background-color:#1e0010">address</span>
-      <span style="color:#f92672">&#34;ports&#34;</span>: [
-        {
-          <span style="color:#f92672">&#34;container_port&#34;</span>: <span style="color:#ae81ff">8080</span>,     <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#960050;background-color:#1e0010">Application</span> <span style="color:#960050;background-color:#1e0010">web</span> <span style="color:#960050;background-color:#1e0010">interface</span> <span style="color:#960050;background-color:#1e0010">port</span>
-          <span style="color:#f92672">&#34;host_port&#34;</span>: <span style="color:#ae81ff">61002</span>          <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#960050;background-color:#1e0010">Node-port</span> <span style="color:#960050;background-color:#1e0010">on</span> <span style="color:#960050;background-color:#1e0010">the</span> <span style="color:#960050;background-color:#1e0010">Diego-cell</span>
-        },
-        {
-          <span style="color:#f92672">&#34;container_port&#34;</span>: <span style="color:#ae81ff">2222</span>,     <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#960050;background-color:#1e0010">Container</span> <span style="color:#960050;background-color:#1e0010">SSH</span> <span style="color:#960050;background-color:#1e0010">interface</span> <span style="color:#960050;background-color:#1e0010">port</span>
-          <span style="color:#f92672">&#34;host_port&#34;</span>: <span style="color:#ae81ff">61003</span>          <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#960050;background-color:#1e0010">Node-port</span> <span style="color:#960050;background-color:#1e0010">on</span> <span style="color:#960050;background-color:#1e0010">the</span> <span style="color:#960050;background-color:#1e0010">Diego-cell</span> <span style="color:#960050;background-color:#1e0010">for</span> <span style="color:#960050;background-color:#1e0010">SSH</span>
-        }
-      ],
-      <span style="color:#f92672">&#34;instance_address&#34;</span>: <span style="color:#e6db74">&#34;192.255.240.4&#34;</span>,     <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#960050;background-color:#1e0010">The</span> <span style="color:#960050;background-color:#1e0010">container</span> <span style="color:#960050;background-color:#1e0010">ip</span>
-      <span style="color:#f92672">&#34;crash_count&#34;</span>: <span style="color:#ae81ff">2</span>,
-      <span style="color:#f92672">&#34;crash_reason&#34;</span>: <span style="color:#e6db74">&#34;Instance never healthy after 1m0s: Failed to make TCP connection to port 8080: connection refused&#34;</span>,
-      <span style="color:#f92672">&#34;state&#34;</span>: <span style="color:#e6db74">&#34;RUNNING&#34;</span>,
-      <span style="color:#f92672">&#34;since&#34;</span>: <span style="color:#ae81ff">1533667120903202800</span>,
-      <span style="color:#f92672">&#34;modification_tag&#34;</span>: {
-      <span style="color:#f92672">&#34;epoch&#34;</span>: <span style="color:#e6db74">&#34;f34cf292-4499-4623-6947-54cfc423e909&#34;</span>,
-      <span style="color:#f92672">&#34;index&#34;</span>: <span style="color:#ae81ff">14</span>
-      }
-  }
-}
-</code></pre></div></li>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;instance&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;process_guid&#34;</span>: <span style="color:#e6db74">&#34;&lt;REDACTED&gt;&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;index&#34;</span>: <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;domain&#34;</span>: <span style="color:#e6db74">&#34;cf-apps&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;instance_guid&#34;</span>: <span style="color:#e6db74">&#34;&lt;REDACTED&gt;&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;cell_id&#34;</span>: <span style="color:#e6db74">&#34;&lt;REDACTED&gt;&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;address&#34;</span>: <span style="color:#e6db74">&#34;192.144.0.140&#34;</span>,      <span style="color:#75715e">// The diego-cell VM address
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#f92672">&#34;ports&#34;</span>: [
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;container_port&#34;</span>: <span style="color:#ae81ff">8080</span>,     <span style="color:#75715e">// Application web interface port
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>          <span style="color:#f92672">&#34;host_port&#34;</span>: <span style="color:#ae81ff">61002</span>          <span style="color:#75715e">// Node-port on the Diego-cell
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        },
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;container_port&#34;</span>: <span style="color:#ae81ff">2222</span>,     <span style="color:#75715e">// Container SSH interface port
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>          <span style="color:#f92672">&#34;host_port&#34;</span>: <span style="color:#ae81ff">61003</span>          <span style="color:#75715e">// Node-port on the Diego-cell for SSH
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>      ],
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;instance_address&#34;</span>: <span style="color:#e6db74">&#34;192.255.240.4&#34;</span>,     <span style="color:#75715e">// The container ip
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#f92672">&#34;crash_count&#34;</span>: <span style="color:#ae81ff">2</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;crash_reason&#34;</span>: <span style="color:#e6db74">&#34;Instance never healthy after 1m0s: Failed to make TCP connection to port 8080: connection refused&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;state&#34;</span>: <span style="color:#e6db74">&#34;RUNNING&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;since&#34;</span>: <span style="color:#ae81ff">1533667120903202800</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;modification_tag&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;epoch&#34;</span>: <span style="color:#e6db74">&#34;f34cf292-4499-4623-6947-54cfc423e909&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;index&#34;</span>: <span style="color:#ae81ff">14</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
 <li>
 <p>Now we will want to find the diego-cell names, so for each diego-cell IP, run:<br>
 <code>diego_cell=$(bosh vms | grep &lt;host&gt; | grep -Po '^diego-cell/[a-z0-9-]*')</code></p>
@@ -246,34 +246,34 @@ Which can be undone with:<br>
 <li>
 <p>To find bound service information, we need call the CF-CLI for environment values. The actual information displayed will vary greatly depending on the service.<br>
 <code>cf env &lt;appname&gt;</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
-  <span style="color:#f92672">&#34;VCAP_SERVICES&#34;</span>: {
-    <span style="color:#f92672">&#34;mysql&#34;</span>: [
-      {
-        <span style="color:#f92672">&#34;credentials&#34;</span>: {
-          <span style="color:#f92672">&#34;hostname&#34;</span>: <span style="color:#e6db74">&#34;10.94.180.19&#34;</span>,  <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#960050;background-color:#1e0010">Service</span> <span style="color:#960050;background-color:#1e0010">ip</span>
-          <span style="color:#f92672">&#34;jdbcUrl&#34;</span>: <span style="color:#e6db74">&#34;jdbc:mysql://192.94.80.119:3306/cf_9ea_2a1a_4dcd340649161?user=REDACTED\\u0026password=REDACTED&#34;</span>,
-          <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;cf_9ea806ad_2a1a_4699_84b4_dcd340649161&#34;</span>,
-          <span style="color:#f92672">&#34;password&#34;</span>: <span style="color:#e6db74">&#34;REDACTED&#34;</span>,
-          <span style="color:#f92672">&#34;port&#34;</span>: <span style="color:#ae81ff">3306</span>,  <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#960050;background-color:#1e0010">Service</span> <span style="color:#960050;background-color:#1e0010">Port</span>
-          <span style="color:#f92672">&#34;uri&#34;</span>: <span style="color:#e6db74">&#34;mysql://REDACTED:REDACTED@192.94.80.119:3306/cf_9ea_2a1a_4dcd340649161?reconnect=true&#34;</span>,
-          <span style="color:#f92672">&#34;username&#34;</span>: <span style="color:#e6db74">&#34;REDACTED&#34;</span>
-        },
-        <span style="color:#f92672">&#34;label&#34;</span>: <span style="color:#e6db74">&#34;mysql&#34;</span>,
-        <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;musicdb&#34;</span>,
-        <span style="color:#f92672">&#34;plan&#34;</span>: <span style="color:#e6db74">&#34;100mb&#34;</span>,
-        <span style="color:#f92672">&#34;provider&#34;</span>: <span style="color:#66d9ef">null</span>,
-        <span style="color:#f92672">&#34;syslog_drain_url&#34;</span>: <span style="color:#66d9ef">null</span>,
-        <span style="color:#f92672">&#34;tags&#34;</span>: [
-          <span style="color:#e6db74">&#34;mysql&#34;</span>,
-          <span style="color:#e6db74">&#34;relational&#34;</span>
-        ],
-        <span style="color:#f92672">&#34;volume_mounts&#34;</span>: []
-      }
-    ]
-  }
-}
-</code></pre></div></li>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;VCAP_SERVICES&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;mysql&#34;</span>: [
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;credentials&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;hostname&#34;</span>: <span style="color:#e6db74">&#34;10.94.180.19&#34;</span>,  <span style="color:#75715e">// Service ip
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>          <span style="color:#f92672">&#34;jdbcUrl&#34;</span>: <span style="color:#e6db74">&#34;jdbc:mysql://192.94.80.119:3306/cf_9ea_2a1a_4dcd340649161?user=REDACTED\\u0026password=REDACTED&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;cf_9ea806ad_2a1a_4699_84b4_dcd340649161&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;password&#34;</span>: <span style="color:#e6db74">&#34;REDACTED&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;port&#34;</span>: <span style="color:#ae81ff">3306</span>,  <span style="color:#75715e">// Service Port
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>          <span style="color:#f92672">&#34;uri&#34;</span>: <span style="color:#e6db74">&#34;mysql://REDACTED:REDACTED@192.94.80.119:3306/cf_9ea_2a1a_4dcd340649161?reconnect=true&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;username&#34;</span>: <span style="color:#e6db74">&#34;REDACTED&#34;</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;label&#34;</span>: <span style="color:#e6db74">&#34;mysql&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;musicdb&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;plan&#34;</span>: <span style="color:#e6db74">&#34;100mb&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;provider&#34;</span>: <span style="color:#66d9ef">null</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;syslog_drain_url&#34;</span>: <span style="color:#66d9ef">null</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;tags&#34;</span>: [
+</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;mysql&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;relational&#34;</span>
+</span></span><span style="display:flex;"><span>        ],
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;volume_mounts&#34;</span>: []
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
 <li>
 <p>Finally, we can add rules to each of the diego-cells to block traffic from our application to our bound service.<br>
 <code>bosh ssh &lt;vmname&gt;</code><br>
@@ -323,7 +323,7 @@ Which can be undone with:<br>
             </div>
             <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -1294,7 +1294,7 @@ Which can be undone with:<br>
             </div>
             <div class="content-right">
 			          
-                  <a class="footer-links" href="https://tmo-oss-getinvite.herokuapp.com/" target="_blank"><i class="fa fa-slack"></i></a>
+                  <a class="footer-links" href="https://gitter.im/tmobile/" target="_blank"><i class="fa fa-gitter"></i></a>
                 
                   <a class="footer-links" href="https://www.youtube.com/playlist?list=PL0mz2nejZ-DgH0XsbYDrKPbeMiEJYWqUg" target="_blank"><i class="fa fa-youtube"></i></a>
                 
@@ -1303,7 +1303,7 @@ Which can be undone with:<br>
         <div class="mobile_version_content" style="width: 100%;">
             
                 <div class="mobile_version margin">
-                    <a class="footer-links" href="https://tmo-oss-getinvite.herokuapp.com/" target="_blank"><i style="min-width: 34px;" class="fa fa-slack"></i></a>
+                    <a class="footer-links" href="https://gitter.im/tmobile/" target="_blank"><i style="min-width: 34px;" class="fa fa-gitter"></i></a>
                 </div>
             
                 <div class="mobile_version margin">

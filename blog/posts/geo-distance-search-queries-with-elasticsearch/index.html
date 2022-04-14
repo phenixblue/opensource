@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="author" content="T-Mobile">
 <meta name="description" content="Open source at the Un-carrier.">
-<meta name="generator" content="Hugo 0.84.4" />
+<meta name="generator" content="Hugo 0.96.0" />
 <title>T-Mobile Open Source</title>
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32" />
@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css" type="text/css" />
 
 <!-- Custom Fonts -->
-<link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" type="text/css" />
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' />
 <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css' />
 
@@ -186,181 +186,176 @@
 </tr>
 </tbody>
 </table>
-<p><!-- raw HTML omitted -->
-To enable geo searches, we have to manually create the mapping and explicitly set the field mapping at the time of index creation.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">mapping</span> = <span style="color:#e6db74">`
-</span><span style="color:#e6db74">{
-</span><span style="color:#e6db74">    &#34;settings&#34;:{
-</span><span style="color:#e6db74">        &#34;number_of_shards&#34;: %v,
-</span><span style="color:#e6db74">        &#34;number_of_replicas&#34;: %v
-</span><span style="color:#e6db74">    },
-</span><span style="color:#e6db74">    &#34;mappings&#34;:{
-</span><span style="color:#e6db74">        &#34;store&#34;:{
-</span><span style="color:#e6db74">            &#34;_source&#34; : { &#34;enabled&#34; : true },
-</span><span style="color:#e6db74">            &#34;properties&#34;:{
-</span><span style="color:#e6db74">                &#34;location&#34;:{
-</span><span style="color:#e6db74">                    &#34;type&#34;:&#34;geo_point&#34;
-</span><span style="color:#e6db74">                }
-</span><span style="color:#e6db74">            }
-</span><span style="color:#e6db74">        }
-</span><span style="color:#e6db74">    }
-</span><span style="color:#e6db74">}`</span>
-</code></pre></div><p>In the code above, you can see we are specifying the location field for store as geo point so that we can provide latitude/longitude pair at the time of indexing.</p>
+<!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">mapping</span> = <span style="color:#e6db74">`
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;settings&#34;:{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;number_of_shards&#34;: %v,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;number_of_replicas&#34;: %v
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    },
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;mappings&#34;:{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;store&#34;:{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            &#34;_source&#34; : { &#34;enabled&#34; : true },
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            &#34;properties&#34;:{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                &#34;location&#34;:{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                    &#34;type&#34;:&#34;geo_point&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">}`</span>
+</span></span></code></pre></div><p>In the code above, you can see we are specifying the location field for store as geo point so that we can provide latitude/longitude pair at the time of indexing.</p>
 <p>Using the Elasticsearch SDK for Golang, we create store locator index as shown in the code below</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">exists</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">IndexExists</span>(<span style="color:#a6e22e">indexName</span>).<span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">context</span>)
-<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">exists</span> {
-    <span style="color:#a6e22e">result</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">CreateIndex</span>(<span style="color:#a6e22e">indexName</span>).
-        <span style="color:#a6e22e">BodyString</span>(<span style="color:#a6e22e">mapping</span>).
-        <span style="color:#a6e22e">Pretty</span>(<span style="color:#66d9ef">true</span>).
-        <span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">context</span>)
-
-    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
-    }
-    <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Acknowledged : %v Shards Acknowledged : %v&#34;</span>, <span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">Acknowledged</span>, <span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">ShardsAcknowledged</span>)
-} <span style="color:#66d9ef">else</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;Index %s already exists&#34;</span>, <span style="color:#a6e22e">indexName</span>)
-}
-<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
-</code></pre></div><p>You can see in the code example above; we are checking to see if the index already exists before creating and using the BodyString method to specify additional index parameters that we discussed earlier.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">exists</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">IndexExists</span>(<span style="color:#a6e22e">indexName</span>).<span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">context</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">exists</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">result</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">CreateIndex</span>(<span style="color:#a6e22e">indexName</span>).
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">BodyString</span>(<span style="color:#a6e22e">mapping</span>).
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Pretty</span>(<span style="color:#66d9ef">true</span>).
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">context</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Acknowledged : %v Shards Acknowledged : %v&#34;</span>, <span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">Acknowledged</span>, <span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">ShardsAcknowledged</span>)
+</span></span><span style="display:flex;"><span>} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;Index %s already exists&#34;</span>, <span style="color:#a6e22e">indexName</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span></code></pre></div><p>You can see in the code example above; we are checking to see if the index already exists before creating and using the BodyString method to specify additional index parameters that we discussed earlier.</p>
 <p>For this post, we can use CURL To index store data feed in CSV file as shown below.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">curl -H <span style="color:#e6db74">&#34;Content-Type: application/json&#34;</span>  -X PUT http://localhost:8080/1.0/index/storelocator --data-binary @20180509.StoreLocator.csv | jq
-</code></pre></div><p>In the service, we first retrieve the index name. I&rsquo;m using <a href="https://github.com/gorilla/mux">gorilla/mux</a> package which implements a request router and dispatcher for matching incoming requests to its handler. We can retrieve the index name from path parameters as shown in the code below</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">params</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mux</span>.<span style="color:#a6e22e">Vars</span>(<span style="color:#a6e22e">r</span>)
-<span style="color:#a6e22e">indexName</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">params</span>[<span style="color:#e6db74">&#34;indexName&#34;</span>]
-</code></pre></div><p>Next, we read the CSV payload, if there was an error reading we are merely returning HTTP BadRequest status code as shown in the code sample below</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Body</span>.<span style="color:#a6e22e">Close</span>()
-<span style="color:#a6e22e">payload</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">ioutil</span>.<span style="color:#a6e22e">ReadAll</span>(<span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Body</span>)
-<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-    <span style="color:#a6e22e">httpStatus</span> = <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusBadRequest</span>
-    <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Error loading CSV payload from request %v&#34;</span>, <span style="color:#a6e22e">err</span>)
-    <span style="color:#a6e22e">e</span> = <span style="color:#a6e22e">models</span>.<span style="color:#a6e22e">Error</span>{
-        <span style="color:#a6e22e">Message</span>: <span style="color:#a6e22e">serverError</span>,
-    }
-    <span style="color:#66d9ef">goto</span> <span style="color:#a6e22e">done</span>
-}
-
-</code></pre></div><p>Once we can successfully read CSV payload from request body, we use the <a href="https://golang.org/pkg/encoding/csv/">csv</a> package to parse and index the store records as shown in the code below.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">csvPayload :<span style="color:#f92672">=</span> string<span style="color:#f92672">(</span>payload<span style="color:#f92672">)</span>
-reader :<span style="color:#f92672">=</span> csv.NewReader<span style="color:#f92672">(</span>strings.NewReader<span style="color:#f92672">(</span>csvPayload<span style="color:#f92672">))</span>
-
-records, err :<span style="color:#f92672">=</span> reader.ReadAll<span style="color:#f92672">()</span>
-<span style="color:#66d9ef">if</span> err !<span style="color:#f92672">=</span> nil <span style="color:#f92672">{</span>
-    log.Fatal<span style="color:#f92672">(</span>err<span style="color:#f92672">)</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#66d9ef">for</span> i, record :<span style="color:#f92672">=</span> range records <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">if</span> i <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">continue</span> //skip header
-    <span style="color:#f92672">}</span>
-    lat, _ :<span style="color:#f92672">=</span> strconv.ParseFloat<span style="color:#f92672">(</span>record<span style="color:#f92672">[</span>15<span style="color:#f92672">]</span>, 64<span style="color:#f92672">)</span>
-    lon, _ :<span style="color:#f92672">=</span> strconv.ParseFloat<span style="color:#f92672">(</span>record<span style="color:#f92672">[</span>16<span style="color:#f92672">]</span>, 64<span style="color:#f92672">)</span>
-    storeRecord :<span style="color:#f92672">=</span> models.StoreRecord<span style="color:#f92672">{</span>
-        StoreCode:       record<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>,
-        BusinessName:    record<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>,
-        Address1:        record<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span>,
-        Address2:        record<span style="color:#f92672">[</span>3<span style="color:#f92672">]</span>,
-        City:            record<span style="color:#f92672">[</span>4<span style="color:#f92672">]</span>,
-        State:           record<span style="color:#f92672">[</span>5<span style="color:#f92672">]</span>,
-        PostalCode:      record<span style="color:#f92672">[</span>6<span style="color:#f92672">]</span>,
-        Country:         record<span style="color:#f92672">[</span>7<span style="color:#f92672">]</span>,
-        PrimaryPhone:    record<span style="color:#f92672">[</span>8<span style="color:#f92672">]</span>,
-        Website:         record<span style="color:#f92672">[</span>9<span style="color:#f92672">]</span>,
-        Description:     record<span style="color:#f92672">[</span>10<span style="color:#f92672">]</span>,
-        PaymentTypes:    getPaymentTypes<span style="color:#f92672">(</span>record<span style="color:#f92672">[</span>11<span style="color:#f92672">])</span>,
-        PrimaryCategory: record<span style="color:#f92672">[</span>12<span style="color:#f92672">]</span>,
-        Photo:           record<span style="color:#f92672">[</span>13<span style="color:#f92672">]</span>,
-        Hours:           parseHours<span style="color:#f92672">(</span>record<span style="color:#f92672">)</span>,
-        Location: models.StoreLocation<span style="color:#f92672">{</span>
-            Latitude:  lat,
-            Longitude: lon,
-        <span style="color:#f92672">}</span>,
-        SapID: record<span style="color:#f92672">[</span>17<span style="color:#f92672">]</span>,
-    <span style="color:#f92672">}</span>
-
-    //for debugging
-    storeJSON, _ :<span style="color:#f92672">=</span> json.Marshal<span style="color:#f92672">(</span>storeRecord<span style="color:#f92672">)</span>
-    log.Printf<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Indexing Store Record %v&#34;</span>, string<span style="color:#f92672">(</span>storeJSON<span style="color:#f92672">))</span>
-
-    //index the doc
-    result, err :<span style="color:#f92672">=</span> p.client.Index<span style="color:#f92672">()</span>.
-        Index<span style="color:#f92672">(</span>indexName<span style="color:#f92672">)</span>.
-        Type<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;store&#34;</span><span style="color:#f92672">)</span>.
-        Id<span style="color:#f92672">(</span>record<span style="color:#f92672">[</span>0<span style="color:#f92672">])</span>.
-        BodyJson<span style="color:#f92672">(</span>storeRecord<span style="color:#f92672">)</span>.
-        Do<span style="color:#f92672">(</span>p.context<span style="color:#f92672">)</span>
-    <span style="color:#66d9ef">if</span> err !<span style="color:#f92672">=</span> nil <span style="color:#f92672">{</span>
-        log.Printf<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Error adding store record for store code %s to index : %v&#34;</span>, record<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>, err<span style="color:#f92672">)</span>
-    <span style="color:#f92672">}</span>
-    log.Printf<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Added store %s to index %s&#34;</span>, result.Id, result.Index<span style="color:#f92672">)</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h4 id="additional-considerations">Additional considerations</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>curl -H <span style="color:#e6db74">&#34;Content-Type: application/json&#34;</span>  -X PUT http://localhost:8080/1.0/index/storelocator --data-binary @20180509.StoreLocator.csv | jq
+</span></span></code></pre></div><p>In the service, we first retrieve the index name. I&rsquo;m using <a href="https://github.com/gorilla/mux">gorilla/mux</a> package which implements a request router and dispatcher for matching incoming requests to its handler. We can retrieve the index name from path parameters as shown in the code below</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">params</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mux</span>.<span style="color:#a6e22e">Vars</span>(<span style="color:#a6e22e">r</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">indexName</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">params</span>[<span style="color:#e6db74">&#34;indexName&#34;</span>]
+</span></span></code></pre></div><p>Next, we read the CSV payload, if there was an error reading we are merely returning HTTP BadRequest status code as shown in the code sample below</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Body</span>.<span style="color:#a6e22e">Close</span>()
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">payload</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">ioutil</span>.<span style="color:#a6e22e">ReadAll</span>(<span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Body</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">httpStatus</span> = <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusBadRequest</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Error loading CSV payload from request %v&#34;</span>, <span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">e</span> = <span style="color:#a6e22e">models</span>.<span style="color:#a6e22e">Error</span>{
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Message</span>: <span style="color:#a6e22e">serverError</span>,
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">goto</span> <span style="color:#a6e22e">done</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Once we can successfully read CSV payload from request body, we use the <a href="https://golang.org/pkg/encoding/csv/">csv</a> package to parse and index the store records as shown in the code below.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>csvPayload :<span style="color:#f92672">=</span> string<span style="color:#f92672">(</span>payload<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>reader :<span style="color:#f92672">=</span> csv.NewReader<span style="color:#f92672">(</span>strings.NewReader<span style="color:#f92672">(</span>csvPayload<span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>records, err :<span style="color:#f92672">=</span> reader.ReadAll<span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> err !<span style="color:#f92672">=</span> nil <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    log.Fatal<span style="color:#f92672">(</span>err<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i, record :<span style="color:#f92672">=</span> range records <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> i <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">continue</span> //skip header
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    lat, _ :<span style="color:#f92672">=</span> strconv.ParseFloat<span style="color:#f92672">(</span>record<span style="color:#f92672">[</span>15<span style="color:#f92672">]</span>, 64<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    lon, _ :<span style="color:#f92672">=</span> strconv.ParseFloat<span style="color:#f92672">(</span>record<span style="color:#f92672">[</span>16<span style="color:#f92672">]</span>, 64<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    storeRecord :<span style="color:#f92672">=</span> models.StoreRecord<span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        StoreCode:       record<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        BusinessName:    record<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        Address1:        record<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        Address2:        record<span style="color:#f92672">[</span>3<span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        City:            record<span style="color:#f92672">[</span>4<span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        State:           record<span style="color:#f92672">[</span>5<span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        PostalCode:      record<span style="color:#f92672">[</span>6<span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        Country:         record<span style="color:#f92672">[</span>7<span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        PrimaryPhone:    record<span style="color:#f92672">[</span>8<span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        Website:         record<span style="color:#f92672">[</span>9<span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        Description:     record<span style="color:#f92672">[</span>10<span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        PaymentTypes:    getPaymentTypes<span style="color:#f92672">(</span>record<span style="color:#f92672">[</span>11<span style="color:#f92672">])</span>,
+</span></span><span style="display:flex;"><span>        PrimaryCategory: record<span style="color:#f92672">[</span>12<span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        Photo:           record<span style="color:#f92672">[</span>13<span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>        Hours:           parseHours<span style="color:#f92672">(</span>record<span style="color:#f92672">)</span>,
+</span></span><span style="display:flex;"><span>        Location: models.StoreLocation<span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            Latitude:  lat,
+</span></span><span style="display:flex;"><span>            Longitude: lon,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span>        SapID: record<span style="color:#f92672">[</span>17<span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    //for debugging
+</span></span><span style="display:flex;"><span>    storeJSON, _ :<span style="color:#f92672">=</span> json.Marshal<span style="color:#f92672">(</span>storeRecord<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    log.Printf<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Indexing Store Record %v&#34;</span>, string<span style="color:#f92672">(</span>storeJSON<span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    //index the doc
+</span></span><span style="display:flex;"><span>    result, err :<span style="color:#f92672">=</span> p.client.Index<span style="color:#f92672">()</span>.
+</span></span><span style="display:flex;"><span>        Index<span style="color:#f92672">(</span>indexName<span style="color:#f92672">)</span>.
+</span></span><span style="display:flex;"><span>        Type<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;store&#34;</span><span style="color:#f92672">)</span>.
+</span></span><span style="display:flex;"><span>        Id<span style="color:#f92672">(</span>record<span style="color:#f92672">[</span>0<span style="color:#f92672">])</span>.
+</span></span><span style="display:flex;"><span>        BodyJson<span style="color:#f92672">(</span>storeRecord<span style="color:#f92672">)</span>.
+</span></span><span style="display:flex;"><span>        Do<span style="color:#f92672">(</span>p.context<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> err !<span style="color:#f92672">=</span> nil <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        log.Printf<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Error adding store record for store code %s to index : %v&#34;</span>, record<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>, err<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    log.Printf<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Added store %s to index %s&#34;</span>, result.Id, result.Index<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h4 id="additional-considerations">Additional considerations</h4>
 <p>With the above indexing mechanism, we can index about 5300 stores in about 20 seconds. Larger the file, you have to consider timeouts, etc. It would be a good practice to break the file down into smaller files and process them into separate requests.</p>
 <h3 id="query-function">Query Function</h3>
 <p>This service handles store locator queries. Query requests include latitude, longitude and distance as parameter, service uses geo distance queries based on lat/lon and distance values passed in request and returns a collection of stores in response.</p>
 <p>If you want to learn more about geo distance queries, head over <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-query.html">here</a></p>
 <p>Here is what the actual query that gets sent to Elasticsearch instance looks like during a store locator query</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">curl -X POST <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>  http://localhost:9200/storelocator/_search <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>  -H <span style="color:#e6db74">&#39;Cache-Control: no-cache&#39;</span> <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>  -H <span style="color:#e6db74">&#39;Content-Type: application/json&#39;</span> <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>  -d <span style="color:#e6db74">&#39;{
-</span><span style="color:#e6db74">    &#34;query&#34;: {
-</span><span style="color:#e6db74">        &#34;bool&#34;: {
-</span><span style="color:#e6db74">            &#34;must&#34;: {
-</span><span style="color:#e6db74">                &#34;match_all&#34;: {}
-</span><span style="color:#e6db74">            },
-</span><span style="color:#e6db74">            &#34;filter&#34;: {
-</span><span style="color:#e6db74">                &#34;geo_distance&#34;: {
-</span><span style="color:#e6db74">                        &#34;distance&#34;: &#34;1km&#34;,
-</span><span style="color:#e6db74">                        &#34;location&#34;: {
-</span><span style="color:#e6db74">                        &#34;lat&#34;:  40.715,
-</span><span style="color:#e6db74">                        &#34;lon&#34;: -73.988
-</span><span style="color:#e6db74">                    }
-</span><span style="color:#e6db74">                }
-</span><span style="color:#e6db74">            }
-</span><span style="color:#e6db74">        }
-</span><span style="color:#e6db74">    }
-</span><span style="color:#e6db74">}&#39;</span>
-</code></pre></div><p>With that in mind, it was quite easy to translate this into go code. Let&rsquo;s dig into this bit more detail.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>curl -X POST <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  http://localhost:9200/storelocator/_search <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -H <span style="color:#e6db74">&#39;Cache-Control: no-cache&#39;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -H <span style="color:#e6db74">&#39;Content-Type: application/json&#39;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -d <span style="color:#e6db74">&#39;{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;query&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;bool&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            &#34;must&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                &#34;match_all&#34;: {}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            },
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            &#34;filter&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                &#34;geo_distance&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                        &#34;distance&#34;: &#34;1km&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                        &#34;location&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                        &#34;lat&#34;:  40.715,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                        &#34;lon&#34;: -73.988
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                    }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">}&#39;</span>
+</span></span></code></pre></div><p>With that in mind, it was quite easy to translate this into go code. Let&rsquo;s dig into this bit more detail.</p>
 <p>First, we set up a geo distance query based on lat/lon and distance values from the request as shown in the sample code below</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">
-<span style="color:#a6e22e">gdq</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">NewGeoDistanceQuery</span>(<span style="color:#e6db74">&#34;location&#34;</span>).
-    <span style="color:#a6e22e">GeoPoint</span>(<span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">GeoPointFromLatLon</span>(<span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">Lat</span>, <span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">Lon</span>)).
-    <span style="color:#a6e22e">Distance</span>(<span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">Radius</span>)
-
-</code></pre></div><p>Next, we set up a bool query and use the geo distance query that was set up in the previous step as a filter as shown in the code below</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">
-<span style="color:#a6e22e">bq</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">NewBoolQuery</span>().
-    <span style="color:#a6e22e">Must</span>(
-        <span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">NewMatchAllQuery</span>(),
-    ).
-    <span style="color:#a6e22e">Filter</span>(
-        <span style="color:#a6e22e">gdq</span>,
-    )
-
-</code></pre></div><p>At this point, we can now execute the search against Elasticsearch instance as shown in the code below.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">results</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">Search</span>(<span style="color:#a6e22e">indexName</span>).
-        <span style="color:#a6e22e">Query</span>(<span style="color:#a6e22e">bq</span>).
-        <span style="color:#a6e22e">Pretty</span>(<span style="color:#66d9ef">true</span>).
-        <span style="color:#a6e22e">From</span>(<span style="color:#ae81ff">0</span>).
-        <span style="color:#a6e22e">Size</span>(<span style="color:#ae81ff">20</span>).
-        <span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">context</span>)
-</code></pre></div><p>Assuming the search request was successful, we iterate through the results and deserialize the JSON to &ldquo;StoreRecord&rdquo; type and append to an array of &ldquo;StoreRecord&rdquo; objects to be returned to the caller as shown in the code below.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">
-<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">results</span>.<span style="color:#a6e22e">Hits</span>.<span style="color:#a6e22e">TotalHits</span> &gt; <span style="color:#ae81ff">0</span> {
-    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">hit</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">results</span>.<span style="color:#a6e22e">Hits</span>.<span style="color:#a6e22e">Hits</span> {
-        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">sr</span> <span style="color:#a6e22e">models</span>.<span style="color:#a6e22e">StoreRecord</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">Unmarshal</span>(<span style="color:#f92672">*</span><span style="color:#a6e22e">hit</span>.<span style="color:#a6e22e">Source</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">sr</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-            <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Error serializing hit source to StoreRecord %v&#34;</span>, <span style="color:#a6e22e">err</span>)
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;Error serializing hit source to StoreRecord&#34;</span>)
-        }
-        <span style="color:#a6e22e">stores</span> = append(<span style="color:#a6e22e">stores</span>, <span style="color:#a6e22e">sr</span>)
-    }
-}
-
-</code></pre></div><p>So there you have it. Elasticsearch is awesome, and the Golang SDK makes building applications that leverage Elasticsearch much easier, the nice part about all of this is store locator queries are super performant, so everybody wins :)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">gdq</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">NewGeoDistanceQuery</span>(<span style="color:#e6db74">&#34;location&#34;</span>).
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">GeoPoint</span>(<span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">GeoPointFromLatLon</span>(<span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">Lat</span>, <span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">Lon</span>)).
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Distance</span>(<span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">Radius</span>)
+</span></span></code></pre></div><p>Next, we set up a bool query and use the geo distance query that was set up in the previous step as a filter as shown in the code below</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">bq</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">NewBoolQuery</span>().
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Must</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">NewMatchAllQuery</span>(),
+</span></span><span style="display:flex;"><span>    ).
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Filter</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">gdq</span>,
+</span></span><span style="display:flex;"><span>    )
+</span></span></code></pre></div><p>At this point, we can now execute the search against Elasticsearch instance as shown in the code below.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">results</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">Search</span>(<span style="color:#a6e22e">indexName</span>).
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Query</span>(<span style="color:#a6e22e">bq</span>).
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Pretty</span>(<span style="color:#66d9ef">true</span>).
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">From</span>(<span style="color:#ae81ff">0</span>).
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Size</span>(<span style="color:#ae81ff">20</span>).
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">context</span>)
+</span></span></code></pre></div><p>Assuming the search request was successful, we iterate through the results and deserialize the JSON to &ldquo;StoreRecord&rdquo; type and append to an array of &ldquo;StoreRecord&rdquo; objects to be returned to the caller as shown in the code below.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">results</span>.<span style="color:#a6e22e">Hits</span>.<span style="color:#a6e22e">TotalHits</span> &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">hit</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">results</span>.<span style="color:#a6e22e">Hits</span>.<span style="color:#a6e22e">Hits</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">sr</span> <span style="color:#a6e22e">models</span>.<span style="color:#a6e22e">StoreRecord</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">Unmarshal</span>(<span style="color:#f92672">*</span><span style="color:#a6e22e">hit</span>.<span style="color:#a6e22e">Source</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">sr</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Error serializing hit source to StoreRecord %v&#34;</span>, <span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;Error serializing hit source to StoreRecord&#34;</span>)
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">stores</span> = append(<span style="color:#a6e22e">stores</span>, <span style="color:#a6e22e">sr</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>So there you have it. Elasticsearch is awesome, and the Golang SDK makes building applications that leverage Elasticsearch much easier, the nice part about all of this is store locator queries are super performant, so everybody wins :)</p>
 <p>Drop a comment or reach out to me via twitter or email if you have any questions.</p>
 <p>Huge shout out to my boss <a href="https://twitter.com/TimothyAShelton">Tim Shelton</a> who originally created the store locator APIs and also graciously agreeing to review this post and sharing his feedback.</p>
 <p>Thanks,
@@ -369,7 +364,7 @@ Ram</p>
             </div>
             <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -1340,7 +1335,7 @@ Ram</p>
             </div>
             <div class="content-right">
 			          
-                  <a class="footer-links" href="https://tmo-oss-getinvite.herokuapp.com/" target="_blank"><i class="fa fa-slack"></i></a>
+                  <a class="footer-links" href="https://gitter.im/tmobile/" target="_blank"><i class="fa fa-gitter"></i></a>
                 
                   <a class="footer-links" href="https://www.youtube.com/playlist?list=PL0mz2nejZ-DgH0XsbYDrKPbeMiEJYWqUg" target="_blank"><i class="fa fa-youtube"></i></a>
                 
@@ -1349,7 +1344,7 @@ Ram</p>
         <div class="mobile_version_content" style="width: 100%;">
             
                 <div class="mobile_version margin">
-                    <a class="footer-links" href="https://tmo-oss-getinvite.herokuapp.com/" target="_blank"><i style="min-width: 34px;" class="fa fa-slack"></i></a>
+                    <a class="footer-links" href="https://gitter.im/tmobile/" target="_blank"><i style="min-width: 34px;" class="fa fa-gitter"></i></a>
                 </div>
             
                 <div class="mobile_version margin">

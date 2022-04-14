@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="author" content="T-Mobile">
 <meta name="description" content="Open source at the Un-carrier.">
-<meta name="generator" content="Hugo 0.84.4" />
+<meta name="generator" content="Hugo 0.96.0" />
 <title>T-Mobile Open Source</title>
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32" />
@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css" type="text/css" />
 
 <!-- Custom Fonts -->
-<link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" type="text/css" />
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' />
 <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css' />
 
@@ -150,7 +150,7 @@ This article is meant to provide a walkthrough/guide to deploy VMWare Harbor on 
 <li>
 <p>Helm installed and configured</p>
 <p>If this your first time using helm, you can learn more about Helm <a href="https://docs.helm.sh/">here</a> and install and configure helm using instructions available <a href="https://github.com/kubernetes/helm/blob/master/docs/install.md">here</a>, additionally be sure to initialize helm with default service account as shown below.</p>
-<pre><code class="language-#!/bin/bash" data-lang="#!/bin/bash">helm init --service-account default
+<pre tabindex="0"><code class="language-#!/bin/bash" data-lang="#!/bin/bash">helm init --service-account default
 </code></pre></li>
 </ul>
 <h2 id="installing-vmware-harbor-on-azure-kubernetes-service">Installing VMWare Harbor on Azure Kubernetes Service</h2>
@@ -160,7 +160,7 @@ This article is meant to provide a walkthrough/guide to deploy VMWare Harbor on 
 <li>
 <p><a href="https://docs.microsoft.com/en-us/azure/aks/ingress#install-an-ingress-controller">install-an-ingress-controller</a></p>
 <p>Follow steps listed in this section to install an NGINX ingress controller. Please be sure to set the RBAC to false as shown below. Preview version of AKS doesn&rsquo;t support RBAC; this could potentially change in future.</p>
-<pre><code>helm install stable/nginx-ingress --namespace kube-system --set rbac.create=false --set rbac.createRole=false --set rbac.createClusterRole=false
+<pre tabindex="0"><code>helm install stable/nginx-ingress --namespace kube-system --set rbac.create=false --set rbac.createRole=false --set rbac.createClusterRole=false
 </code></pre></li>
 <li>
 <p><a href="https://docs.microsoft.com/en-us/azure/aks/ingress#configure-dns-name">Configure-dns-name</a></p>
@@ -182,29 +182,29 @@ This article is meant to provide a walkthrough/guide to deploy VMWare Harbor on 
 </ul>
 <h2 id="20-create-an-azure-storage-account">2.0. Create an Azure storage account</h2>
 <p>Harbor registry requires persistent blob storage to store all the docker images. Since we are deploying this on Azure we will need to use Azure Blob storage. Follow instructions below to create an Azure Storage Account in your subscription. One thing to keep in mind here is we need to ensure Azure storage account is created in &ldquo;EastUS&rdquo; region as AKS in the preview is currently only available in that region. We don&rsquo;t want our AKS cluster in EastUS and Storage Account used by VMware Harbor to store images be in a different region.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">AKS_STORAGE_ACCOUNT_NAME<span style="color:#f92672">=</span>&lt;Provide storage account name&gt;
-AKS_RESOURCE_GROUP<span style="color:#f92672">=</span>&lt;Provide the Kubenetes Resource group&gt;
-AKS_REGION<span style="color:#f92672">=</span>eastus 
-
-<span style="color:#75715e">#Create the storage account</span>
-az storage account create -n $AKS_STORAGE_ACCOUNT_NAME -g $AKS_RESOURCE_GROUP -l $AKS_REGION --sku Standard_LRS
-
-<span style="color:#75715e">#Export the connection string as an environment variable, this is used when creating </span>
-export AZURE_STORAGE_CONNECTION_STRING<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>az storage account show-connection-string -n $AKS_STORAGE_ACCOUNT_NAME -g $AKS_RESOURCE_GROUP -o tsv<span style="color:#e6db74">`</span>
-
-<span style="color:#75715e">#Get storage account key</span>
-STORAGE_KEY<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>az storage account keys list --resource-group $AKS_RESOURCE_GROUP --account-name $AKS_STORAGE_ACCOUNT_NAME --query <span style="color:#e6db74">&#34;[0].value&#34;</span> -o tsv<span style="color:#66d9ef">)</span>
-<span style="color:#75715e">#Echo storage account name and key</span>
-echo Storage account name: $AKS_STORAGE_ACCOUNT_NAME
-echo Storage account key: $STORAGE_KEY
-</code></pre></div><p>Note down the account name and key; you will need it in the steps below.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>AKS_STORAGE_ACCOUNT_NAME<span style="color:#f92672">=</span>&lt;Provide storage account name&gt;
+</span></span><span style="display:flex;"><span>AKS_RESOURCE_GROUP<span style="color:#f92672">=</span>&lt;Provide the Kubenetes Resource group&gt;
+</span></span><span style="display:flex;"><span>AKS_REGION<span style="color:#f92672">=</span>eastus 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Create the storage account</span>
+</span></span><span style="display:flex;"><span>az storage account create -n $AKS_STORAGE_ACCOUNT_NAME -g $AKS_RESOURCE_GROUP -l $AKS_REGION --sku Standard_LRS
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Export the connection string as an environment variable, this is used when creating </span>
+</span></span><span style="display:flex;"><span>export AZURE_STORAGE_CONNECTION_STRING<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>az storage account show-connection-string -n $AKS_STORAGE_ACCOUNT_NAME -g $AKS_RESOURCE_GROUP -o tsv<span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Get storage account key</span>
+</span></span><span style="display:flex;"><span>STORAGE_KEY<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>az storage account keys list --resource-group $AKS_RESOURCE_GROUP --account-name $AKS_STORAGE_ACCOUNT_NAME --query <span style="color:#e6db74">&#34;[0].value&#34;</span> -o tsv<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#Echo storage account name and key</span>
+</span></span><span style="display:flex;"><span>echo Storage account name: $AKS_STORAGE_ACCOUNT_NAME
+</span></span><span style="display:flex;"><span>echo Storage account key: $STORAGE_KEY
+</span></span></code></pre></div><p>Note down the account name and key; you will need it in the steps below.</p>
 <h2 id="30-deploying-harbor-using-helm-chart">3.0. Deploying Harbor using Helm chart</h2>
 <h3 id="31-download-helm-chart-from-harbor-github-repository">3.1. Download Helm chart from Harbor GitHub repository</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/vmware/harbor
-cd harbor/contrib/helm/harbor
-</code></pre></div><h3 id="32-download-chart-dependencies">3.2. Download Chart dependencies</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">helm dependency update
-</code></pre></div><h3 id="33-update-helm-chart-for-harbor">3.3. Update Helm chart for Harbor</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/vmware/harbor
+</span></span><span style="display:flex;"><span>cd harbor/contrib/helm/harbor
+</span></span></code></pre></div><h3 id="32-download-chart-dependencies">3.2. Download Chart dependencies</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>helm dependency update
+</span></span></code></pre></div><h3 id="33-update-helm-chart-for-harbor">3.3. Update Helm chart for Harbor</h3>
 <p>We need to make some changes to values.yaml.</p>
 <h4 id="331-updates-to-valuesyaml">3.3.1 Updates to values.yaml</h4>
 <ul>
@@ -226,48 +226,47 @@ cd harbor/contrib/helm/harbor
 </li>
 </ul>
 <p>Once the above changes are complete, your values.yaml should look like below.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"> <span style="color:#f92672">externalDomain</span>: <span style="color:#ae81ff">tmobile-Harbor-demo.eastus.cloudapp.azure.com</span>
- <span style="color:#f92672">generateCertificates</span>: <span style="color:#66d9ef">false</span>
- <span style="color:#f92672">ingress</span>:
- <span style="color:#f92672">annotations</span>:
-    <span style="color:#f92672">kubernetes.io/tls-acme</span>: <span style="color:#e6db74">&#34;true&#34;</span>
-    <span style="color:#f92672">kubernetes.io/ingress.class</span>: <span style="color:#ae81ff">nginx</span>
-    <span style="color:#f92672">ingress.kubernetes.io/ssl-redirect</span>: <span style="color:#e6db74">&#34;true&#34;</span>
-    <span style="color:#f92672">ingress.kubernetes.io/proxy-body-size</span>: <span style="color:#e6db74">&#34;0&#34;</span>
-    <span style="color:#f92672">nginx.ingress.kubernetes.io/proxy-body-size</span>: <span style="color:#e6db74">&#34;0&#34;</span>
-  <span style="color:#f92672">objectStorage</span>:
-    <span style="color:#f92672">gcs</span>:
-      <span style="color:#f92672">keyfile</span>: <span style="color:#e6db74">&#34;&#34;</span>
-      <span style="color:#f92672">bucket</span>: <span style="color:#e6db74">&#34;&#34;</span>
-      <span style="color:#f92672">chunksize</span>: <span style="color:#e6db74">&#34;5242880&#34;</span>
-    <span style="color:#f92672">s3</span>:
-      <span style="color:#f92672">region</span>: <span style="color:#e6db74">&#34;&#34;</span>
-      <span style="color:#f92672">accesskey</span>: <span style="color:#e6db74">&#34;&#34;</span>
-      <span style="color:#f92672">secretkey</span>: <span style="color:#e6db74">&#34;&#34;</span>
-      <span style="color:#f92672">bucket</span>: <span style="color:#e6db74">&#34;&#34;</span>
-      <span style="color:#f92672">encrypt</span>: <span style="color:#e6db74">&#34;true&#34;</span>
-    <span style="color:#f92672">azure</span>:
-      <span style="color:#f92672">accountname</span>: <span style="color:#e6db74">&#34;Storage account name (from above)&#34;</span>
-      <span style="color:#f92672">accountkey</span>: <span style="color:#e6db74">&#34;Storage account key (from above)&#34;</span>
-      <span style="color:#f92672">container</span>: <span style="color:#e6db74">&#34;images&#34;</span>
-</code></pre></div><h3 id="34-deploy-to-aks">3.4. Deploy to AKS</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span> <span style="color:#f92672">externalDomain</span>: <span style="color:#ae81ff">tmobile-Harbor-demo.eastus.cloudapp.azure.com</span>
+</span></span><span style="display:flex;"><span> <span style="color:#f92672">generateCertificates</span>: <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span> <span style="color:#f92672">ingress</span>:
+</span></span><span style="display:flex;"><span> <span style="color:#f92672">annotations</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">kubernetes.io/tls-acme</span>: <span style="color:#e6db74">&#34;true&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">kubernetes.io/ingress.class</span>: <span style="color:#ae81ff">nginx</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ingress.kubernetes.io/ssl-redirect</span>: <span style="color:#e6db74">&#34;true&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ingress.kubernetes.io/proxy-body-size</span>: <span style="color:#e6db74">&#34;0&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">nginx.ingress.kubernetes.io/proxy-body-size</span>: <span style="color:#e6db74">&#34;0&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">objectStorage</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">gcs</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">keyfile</span>: <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">bucket</span>: <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">chunksize</span>: <span style="color:#e6db74">&#34;5242880&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">s3</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">region</span>: <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">accesskey</span>: <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">secretkey</span>: <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">bucket</span>: <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">encrypt</span>: <span style="color:#e6db74">&#34;true&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">azure</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">accountname</span>: <span style="color:#e6db74">&#34;Storage account name (from above)&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">accountkey</span>: <span style="color:#e6db74">&#34;Storage account key (from above)&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">container</span>: <span style="color:#e6db74">&#34;images&#34;</span>
+</span></span></code></pre></div><h3 id="34-deploy-to-aks">3.4. Deploy to AKS</h3>
 <p>We can now deploy harbor to AKS using the Helm install command as shown below.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">
-helm install . --debug --name my-release --set externalDomain<span style="color:#f92672">=</span>tmobile-harbor-demo.eastus.cloudapp.azure.com
-
-</code></pre></div><p>At this point you should go get that coffee as it will take a little bit for Harbor deployment to be completely ready.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>helm install . --debug --name my-release --set externalDomain<span style="color:#f92672">=</span>tmobile-harbor-demo.eastus.cloudapp.azure.com
+</span></span></code></pre></div><p>At this point you should go get that coffee as it will take a little bit for Harbor deployment to be completely ready.</p>
 <h2 id="40-verify-the-deployment">4.0. Verify the deployment</h2>
 <p>Verify all pods are in running state as well as ingresses. You can perform this using azure CLI or kubectl.</p>
 <p>Using Azure CLI</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">az aks browse --resource-group &lt;YOUR RESOURCE GROUP&gt; --name &lt;KUBERNETES SERVICE NAME&gt;
-</code></pre></div><p>Using kubectl</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods
-kubectl get ing
-</code></pre></div><h3 id="41-verify-we-can-access-the-harbor-web-ui">4.1. Verify we can access the Harbor web UI</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>az aks browse --resource-group &lt;YOUR RESOURCE GROUP&gt; --name &lt;KUBERNETES SERVICE NAME&gt;
+</span></span></code></pre></div><p>Using kubectl</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get pods
+</span></span><span style="display:flex;"><span>kubectl get ing
+</span></span></code></pre></div><h3 id="41-verify-we-can-access-the-harbor-web-ui">4.1. Verify we can access the Harbor web UI</h3>
 <h4 id="411-getting-harbor-admin-password">4.1.1 Getting Harbor admin password</h4>
 <p>To login to Harbor web UI requires a user name and password. Run the kubectl command below to retrieve Harbor admin user password.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get secret --namespace default harbor-on-aks-harbor-adminserver -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{.data.HARBOR_ADMIN_PASSWORD}&#34;</span> | base64 --decode; echo
-</code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get secret --namespace default harbor-on-aks-harbor-adminserver -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{.data.HARBOR_ADMIN_PASSWORD}&#34;</span> | base64 --decode; echo
+</span></span></code></pre></div><ul>
 <li>
 <p>Launch browser and navigate to <a href="https://tmobile-harbor-demo.eastus.cloudapp.azure.com">https://tmobile-harbor-demo.eastus.cloudapp.azure.com</a></p>
 </li>
@@ -279,32 +278,30 @@ kubectl get ing
 <h3 id="42-configure-docker">4.2. Configure docker</h3>
 <h4 id="421-add-the-harbor-ca-certificate-to-docker">4.2.1. Add the Harbor CA certificate to Docker</h4>
 <p>Make directory under &ldquo;/etc/docker/certs.d/&rdquo; and name it same as the FQDN you used for Harbor. For this POC since we used tmobile-harbor-demo for DNS, full FQDN is going to be &ldquo;tmobile-harbor-demo.eastus.cloudapp.azure.com&rdquo;. Execute kubectl command below to download the CA cert which is stored as secret.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get secret <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    --namespace default harbor-on-aks-harbor-ingress <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{.data.ca\.crt}&#34;</span> | base64 --decode | <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    sudo tee /etc/docker/certs.d/tmobile-harbor-demo.eastus.cloudapp.azure.com/ca.crt
-</code></pre></div><h4 id="422-login-to-harbor-registry-using-docker-cli">4.2.2. Login to Harbor registry using Docker CLI</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get secret <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --namespace default harbor-on-aks-harbor-ingress <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{.data.ca\.crt}&#34;</span> | base64 --decode | <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    sudo tee /etc/docker/certs.d/tmobile-harbor-demo.eastus.cloudapp.azure.com/ca.crt
+</span></span></code></pre></div><h4 id="422-login-to-harbor-registry-using-docker-cli">4.2.2. Login to Harbor registry using Docker CLI</h4>
 <p>Before we can push/pull images from registry, we need to login to the Harbor registry. Run command below to login to Harbor registry from Docker CLI. When prompted enter Harbor admin user credentials.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker login tmobile-harbor-demo.eastus.cloudapp.azure.com
-
-</code></pre></div><h4 id="423-pushing-a-docker-image-to-harbor-registry">4.2.3. Pushing a Docker image to Harbor registry</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker login tmobile-harbor-demo.eastus.cloudapp.azure.com
+</span></span></code></pre></div><h4 id="423-pushing-a-docker-image-to-harbor-registry">4.2.3. Pushing a Docker image to Harbor registry</h4>
 <p>Run commands below to quickly test pushing. For this post I created a sample project called &ldquo;fromhub&rdquo; using Harbor web UI.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">
-<span style="color:#75715e">#pull default hello world image from docker hub</span>
-docker pull hello-world
-
-<span style="color:#75715e">#tag image</span>
-docker tag hello-world:latest tmobile-harbor-demo.eastus.cloudapp.azure.com/fromhub/hello-world:latest
-
-<span style="color:#75715e">#push image to Harbor registry</span>
-docker push tmobile-harbor-demo.eastus.cloudapp.azure.com/fromhub/hello-world:latest
-
-</code></pre></div><p>If all is well, the image should be successfully pushed and you should be able to login back into Harbor web UI and see it there.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#pull default hello world image from docker hub</span>
+</span></span><span style="display:flex;"><span>docker pull hello-world
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#tag image</span>
+</span></span><span style="display:flex;"><span>docker tag hello-world:latest tmobile-harbor-demo.eastus.cloudapp.azure.com/fromhub/hello-world:latest
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#push image to Harbor registry</span>
+</span></span><span style="display:flex;"><span>docker push tmobile-harbor-demo.eastus.cloudapp.azure.com/fromhub/hello-world:latest
+</span></span></code></pre></div><p>If all is well, the image should be successfully pushed and you should be able to login back into Harbor web UI and see it there.</p>
 <h4 id="423-enabling-content-trust-and-image-signing">4.2.3. Enabling content trust and image signing</h4>
 <p>Set environment variables to enable content trust and image signing as shown below.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">export DOCKER_CONTENT_TRUST<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
-export DOCKER_CONTENT_TRUST_SERVER<span style="color:#f92672">=</span>https://&lt;YOUR NOTARYDNS&gt;.eastus.cloudapp.azure.com
-</code></pre></div><p>If you are new to Harbor please check out <a href="https://github.com/vmware/harbor">Harbor project</a> on Github</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>export DOCKER_CONTENT_TRUST<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>export DOCKER_CONTENT_TRUST_SERVER<span style="color:#f92672">=</span>https://&lt;YOUR NOTARYDNS&gt;.eastus.cloudapp.azure.com
+</span></span></code></pre></div><p>If you are new to Harbor please check out <a href="https://github.com/vmware/harbor">Harbor project</a> on Github</p>
 <h2 id="50-resources">5.0. Resources</h2>
 <p>The following list of resources was immensely helpful, a huge shout out to everyone who contributed content to these articles.</p>
 <ul>
@@ -324,7 +321,7 @@ export DOCKER_CONTENT_TRUST_SERVER<span style="color:#f92672">=</span>https://&l
             </div>
             <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -1295,7 +1292,7 @@ export DOCKER_CONTENT_TRUST_SERVER<span style="color:#f92672">=</span>https://&l
             </div>
             <div class="content-right">
 			          
-                  <a class="footer-links" href="https://tmo-oss-getinvite.herokuapp.com/" target="_blank"><i class="fa fa-slack"></i></a>
+                  <a class="footer-links" href="https://gitter.im/tmobile/" target="_blank"><i class="fa fa-gitter"></i></a>
                 
                   <a class="footer-links" href="https://www.youtube.com/playlist?list=PL0mz2nejZ-DgH0XsbYDrKPbeMiEJYWqUg" target="_blank"><i class="fa fa-youtube"></i></a>
                 
@@ -1304,7 +1301,7 @@ export DOCKER_CONTENT_TRUST_SERVER<span style="color:#f92672">=</span>https://&l
         <div class="mobile_version_content" style="width: 100%;">
             
                 <div class="mobile_version margin">
-                    <a class="footer-links" href="https://tmo-oss-getinvite.herokuapp.com/" target="_blank"><i style="min-width: 34px;" class="fa fa-slack"></i></a>
+                    <a class="footer-links" href="https://gitter.im/tmobile/" target="_blank"><i style="min-width: 34px;" class="fa fa-gitter"></i></a>
                 </div>
             
                 <div class="mobile_version margin">

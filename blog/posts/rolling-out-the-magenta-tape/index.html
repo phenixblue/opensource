@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="author" content="T-Mobile">
 <meta name="description" content="Open source at the Un-carrier.">
-<meta name="generator" content="Hugo 0.84.4" />
+<meta name="generator" content="Hugo 0.96.0" />
 <title>T-Mobile Open Source</title>
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32" />
@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css" type="text/css" />
 
 <!-- Custom Fonts -->
-<link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" type="text/css" />
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' />
 <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css' />
 
@@ -190,38 +190,38 @@
 <p>NOTE: Each policy gets assigned an <code>MT</code> number to allow for concise feedback via alerting/events and enable an easy mechanism for self service lookup that can cover more detailed information on what causes a failure for a specific policy and how you can adjust your configurations to pass the policy evaluation.</p>
 <hr>
 <h3 id="example-magtape-v10-policy-definition">Example MagTape v1.0 Policy Definition</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Function to check for the existence of a liveness probe within a container spec</span>
-
-policy_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;liveness_probe&#34;</span>
-obj_name <span style="color:#f92672">=</span> container_spec[<span style="color:#e6db74">&#34;name&#34;</span>]
-mt_severity <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;LOW&#34;</span>
-mt_code <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;MT1001&#34;</span>
-
-<span style="color:#75715e"># Set policy specific Prometheus metric for total count</span>
-prom_policy_requests<span style="color:#f92672">.</span>labels(scope <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;policy&#34;</span>, count_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;total&#34;</span>, policy <span style="color:#f92672">=</span> policy_name, mt_code <span style="color:#f92672">=</span> mt_code)<span style="color:#f92672">.</span>inc()
-
-<span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;livenessProbe&#34;</span> <span style="color:#f92672">in</span> container_spec:
-
-    <span style="color:#75715e"># Set policy specific Prometheus metric for pass count</span>
-    prom_policy_requests<span style="color:#f92672">.</span>labels(scope <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;policy&#34;</span>, count_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;pass&#34;</span>, policy <span style="color:#f92672">=</span> policy_name, mt_code <span style="color:#f92672">=</span> mt_code)<span style="color:#f92672">.</span>inc()
-
-    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[PASS] </span><span style="color:#e6db74">{</span>mt_severity<span style="color:#e6db74">}</span><span style="color:#e6db74"> - Found liveness probe in container spec for </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">{</span>obj_name<span style="color:#e6db74">}</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74"> (</span><span style="color:#e6db74">{</span>mt_code<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span>)
-
-    msg <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[PASS] </span><span style="color:#e6db74">{</span>mt_severity<span style="color:#e6db74">}</span><span style="color:#e6db74"> - Liveness Probe Check (</span><span style="color:#e6db74">{</span>tke_code<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span> <span style="color:#f92672">+</span> set_line_end(lineend_type)
-
-    <span style="color:#66d9ef">return</span> msg
-
-<span style="color:#66d9ef">else</span>:
-
-    <span style="color:#75715e"># Set policy specific Prometheus metric for fail count</span>
-    prom_policy_requests<span style="color:#f92672">.</span>labels(scope <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;policy&#34;</span>, count_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;fail&#34;</span>, policy <span style="color:#f92672">=</span> policy_name, mt_code <span style="color:#f92672">=</span> mt_code)<span style="color:#f92672">.</span>inc()
-
-    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[FAIL] </span><span style="color:#e6db74">{</span>mt_severity<span style="color:#e6db74">}</span><span style="color:#e6db74"> - No liveness probe was found in container spec: </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">{</span>obj_name<span style="color:#e6db74">}</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74"> (</span><span style="color:#e6db74">{</span>mt_code<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span>)
-
-    msg <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[FAIL] </span><span style="color:#e6db74">{</span>mt_severity<span style="color:#e6db74">}</span><span style="color:#e6db74"> - Liveness Probe Check (</span><span style="color:#e6db74">{</span>tke_code<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span> <span style="color:#f92672">+</span> set_line_end(lineend_type)
-
-    <span style="color:#66d9ef">return</span> msg
-</code></pre></div><hr>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Function to check for the existence of a liveness probe within a container spec</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>policy_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;liveness_probe&#34;</span>
+</span></span><span style="display:flex;"><span>obj_name <span style="color:#f92672">=</span> container_spec[<span style="color:#e6db74">&#34;name&#34;</span>]
+</span></span><span style="display:flex;"><span>mt_severity <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;LOW&#34;</span>
+</span></span><span style="display:flex;"><span>mt_code <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;MT1001&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Set policy specific Prometheus metric for total count</span>
+</span></span><span style="display:flex;"><span>prom_policy_requests<span style="color:#f92672">.</span>labels(scope <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;policy&#34;</span>, count_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;total&#34;</span>, policy <span style="color:#f92672">=</span> policy_name, mt_code <span style="color:#f92672">=</span> mt_code)<span style="color:#f92672">.</span>inc()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;livenessProbe&#34;</span> <span style="color:#f92672">in</span> container_spec:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Set policy specific Prometheus metric for pass count</span>
+</span></span><span style="display:flex;"><span>    prom_policy_requests<span style="color:#f92672">.</span>labels(scope <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;policy&#34;</span>, count_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;pass&#34;</span>, policy <span style="color:#f92672">=</span> policy_name, mt_code <span style="color:#f92672">=</span> mt_code)<span style="color:#f92672">.</span>inc()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[PASS] </span><span style="color:#e6db74">{</span>mt_severity<span style="color:#e6db74">}</span><span style="color:#e6db74"> - Found liveness probe in container spec for </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">{</span>obj_name<span style="color:#e6db74">}</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74"> (</span><span style="color:#e6db74">{</span>mt_code<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    msg <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[PASS] </span><span style="color:#e6db74">{</span>mt_severity<span style="color:#e6db74">}</span><span style="color:#e6db74"> - Liveness Probe Check (</span><span style="color:#e6db74">{</span>tke_code<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span> <span style="color:#f92672">+</span> set_line_end(lineend_type)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> msg
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Set policy specific Prometheus metric for fail count</span>
+</span></span><span style="display:flex;"><span>    prom_policy_requests<span style="color:#f92672">.</span>labels(scope <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;policy&#34;</span>, count_type <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;fail&#34;</span>, policy <span style="color:#f92672">=</span> policy_name, mt_code <span style="color:#f92672">=</span> mt_code)<span style="color:#f92672">.</span>inc()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[FAIL] </span><span style="color:#e6db74">{</span>mt_severity<span style="color:#e6db74">}</span><span style="color:#e6db74"> - No liveness probe was found in container spec: </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">{</span>obj_name<span style="color:#e6db74">}</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74"> (</span><span style="color:#e6db74">{</span>mt_code<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    msg <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;[FAIL] </span><span style="color:#e6db74">{</span>mt_severity<span style="color:#e6db74">}</span><span style="color:#e6db74"> - Liveness Probe Check (</span><span style="color:#e6db74">{</span>tke_code<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span> <span style="color:#f92672">+</span> set_line_end(lineend_type)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> msg
+</span></span></code></pre></div><hr>
 <h3 id="example-alerts">Example Alerts</h3>
 <p><img src="/blog/magtape/magtape-alerts-3.png#center" alt="magtape-slack-alert-failure"></p>
 <hr>
@@ -243,15 +243,15 @@ prom_policy_requests<span style="color:#f92672">.</span>labels(scope <span style
 </ul>
 <hr>
 <h3 id="example-magtape-20-policy-definition-rego">Example MagTape 2.0 Policy Definition (Rego)</h3>
-<pre><code class="language-rego" data-lang="rego">package kubernetes.admission.policy_liveness_probe
+<pre tabindex="0"><code class="language-rego" data-lang="rego">package kubernetes.admission.policy_liveness_probe
 
 policy_metadata = {
 
     # Set MagTape Policy Info
-    &quot;name&quot;: &quot;policy-liveness-probe&quot;,
-    &quot;severity&quot;: &quot;LOW&quot;,
-    &quot;errcode&quot;: &quot;MT1001&quot;,
-    &quot;targets&quot;: {&quot;Deployment&quot;, &quot;StatefulSet&quot;, &quot;DaemonSet&quot;, &quot;Pod&quot;},
+    &#34;name&#34;: &#34;policy-liveness-probe&#34;,
+    &#34;severity&#34;: &#34;LOW&#34;,
+    &#34;errcode&#34;: &#34;MT1001&#34;,
+    &#34;targets&#34;: {&#34;Deployment&#34;, &#34;StatefulSet&#34;, &#34;DaemonSet&#34;, &#34;Pod&#34;},
 
 }
 
@@ -275,21 +275,21 @@ deny[info] {
     not container.livenessProbe
 
     # Build message to return
-    msg = sprintf(&quot;[FAIL] %v - Liveness Probe missing for container \&quot;%v\&quot; (%v)&quot;, [policy_metadata.severity, name, policy_metadata.errcode])
+    msg = sprintf(&#34;[FAIL] %v - Liveness Probe missing for container \&#34;%v\&#34; (%v)&#34;, [policy_metadata.severity, name, policy_metadata.errcode])
 
     info := {
         
-    	&quot;name&quot;: policy_metadata.name,
-		&quot;severity&quot;: policy_metadata.severity,
-        &quot;errcode&quot;: policy_metadata.errcode,
-		&quot;msg&quot;: msg,
+    	&#34;name&#34;: policy_metadata.name,
+		&#34;severity&#34;: policy_metadata.severity,
+        &#34;errcode&#34;: policy_metadata.errcode,
+		&#34;msg&#34;: msg,
     }
 }
 
 # find_containers accepts a value (k8s object type) and returns the container spec
 find_containers(type, metadata) = input.request.object.spec.containers {
 
-    type == &quot;Pod&quot;
+    type == &#34;Pod&#34;
 
 } else = input.request.object.spec.template.spec.containers {
 
@@ -316,7 +316,7 @@ find_containers(type, metadata) = input.request.object.spec.containers {
             </div>
             <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -1287,7 +1287,7 @@ find_containers(type, metadata) = input.request.object.spec.containers {
             </div>
             <div class="content-right">
 			          
-                  <a class="footer-links" href="https://tmo-oss-getinvite.herokuapp.com/" target="_blank"><i class="fa fa-slack"></i></a>
+                  <a class="footer-links" href="https://gitter.im/tmobile/" target="_blank"><i class="fa fa-gitter"></i></a>
                 
                   <a class="footer-links" href="https://www.youtube.com/playlist?list=PL0mz2nejZ-DgH0XsbYDrKPbeMiEJYWqUg" target="_blank"><i class="fa fa-youtube"></i></a>
                 
@@ -1296,7 +1296,7 @@ find_containers(type, metadata) = input.request.object.spec.containers {
         <div class="mobile_version_content" style="width: 100%;">
             
                 <div class="mobile_version margin">
-                    <a class="footer-links" href="https://tmo-oss-getinvite.herokuapp.com/" target="_blank"><i style="min-width: 34px;" class="fa fa-slack"></i></a>
+                    <a class="footer-links" href="https://gitter.im/tmobile/" target="_blank"><i style="min-width: 34px;" class="fa fa-gitter"></i></a>
                 </div>
             
                 <div class="mobile_version margin">

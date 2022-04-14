@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="author" content="T-Mobile">
 <meta name="description" content="Open source at the Un-carrier.">
-<meta name="generator" content="Hugo 0.84.4" />
+<meta name="generator" content="Hugo 0.96.0" />
 <title>T-Mobile Open Source</title>
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32" />
@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css" type="text/css" />
 
 <!-- Custom Fonts -->
-<link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" type="text/css" />
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' />
 <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css' />
 
@@ -133,143 +133,143 @@
 <p>Percy facilitates editing configuration files in a terse (de-hydrated) format that is intended to simplify maintenance of external configuration files of an app or service across multiple deployed environments. The Percy project includes a set of validation and hydration scripts that will expand the de-hydrated ( DRY) configuration files into a set of JSON files, one for every deployment environment. You will still need a mechanism to publish/distribute those config files to your running application/service.</p>
 <h2 id="the-problem">The Problem:</h2>
 <p>While working on one of our projects I saw a great deal of duplication in our application configuration files. Not only did we have duplication across a single environment configuration (base urls) but we had the same duplication across the 21 different environments — often only the base urls would change.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#e6db74">&#34;url&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> {
-	<span style="color:#f92672">&#34;mostPopularDevices&#34;</span>:         <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/search-promote/?type=browse&amp;&#34;</span>,
-	<span style="color:#f92672">&#34;productBrowseDetailsLive&#34;</span>:   <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/search-promote/?type=browse&amp;pt=Device&amp;ps=Handset&#34;</span>,
-	<span style="color:#f92672">&#34;accessoryBrowseDetailsLive&#34;</span>: <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/search-promote/?type=browse&amp;pt=Accessory&#34;</span>,
-	<span style="color:#f92672">&#34;accessories&#34;</span>:                <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/search-promote/?type=browse&amp;pt=Accessory&amp;o=&#34;</span>,
-	<span style="color:#f92672">&#34;compatibleAccessory&#34;</span>:        <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/search-promote/?type=browse&amp;pt=Accessory&amp;facets=true&#34;</span>,
-	<span style="color:#f92672">&#34;authorization&#34;</span>:              <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/oauth/v1/access&#34;</span>,
-	<span style="color:#f92672">&#34;updateProfile&#34;</span>:              <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/update-profile&#34;</span>,
-	<span style="color:#f92672">&#34;ShippingOrderFees&#34;</span>:          <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/order/fees&#34;</span>,
-	<span style="color:#f92672">&#34;simKitDetails&#34;</span>:              <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/productDetails/i-739C46ADBDEE4AE9ADE7BF05D984EAE1&#34;</span>,
-	<span style="color:#f92672">&#34;shippingOptionsUrl&#34;</span>:         <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/shipping-option/&#34;</span>,
-
-	<span style="color:#f92672">&#34;creditCardInfo&#34;</span>:             <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/creditcards/orders&#34;</span>,
-
-	<span style="color:#f92672">&#34;checkoutSetAddress&#34;</span>:         <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/v1/orders/{{orderID}}/address&#34;</span>,
-	<span style="color:#f92672">&#34;creditcheckUrl&#34;</span>:             <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/v1/orders/creditcheck/&#34;</span>,
-	<span style="color:#f92672">&#34;creditcardUrl&#34;</span>:              <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/v1/orders/creditcards/&#34;</span>,
-
-	<span style="color:#f92672">&#34;getProfile&#34;</span>:                 <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/v1/profile&#34;</span>,
-	<span style="color:#f92672">&#34;authorableCarousel&#34;</span>:         <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/v1/products&#34;</span>,
-
-	<span style="color:#f92672">&#34;getDefaultCart&#34;</span>:             <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/v1/carts&#34;</span>,
-	<span style="color:#f92672">&#34;removeAccessoryFromCart&#34;</span>:    <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/v1/carts/&#34;</span>,
-	<span style="color:#f92672">&#34;addAccessoryToCart&#34;</span>:         <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/v1/carts/&#34;</span>,
-
-  <span style="color:#f92672">&#34;storeLocator&#34;</span>: {
-    <span style="color:#f92672">&#34;search&#34;</span>:            <span style="color:#e6db74">&#34;kkcdrrnxwk.execute-api.us-west-2.amazonaws.com/dev/prod/getStoresByCoordinates&#34;</span>,
-    <span style="color:#f92672">&#34;stateSearch&#34;</span>:       <span style="color:#e6db74">&#34;kcdrrnxwk.execute-api.us-west-2.amazonaws.com/prod/getStoresInState&#34;</span>,
-    <span style="color:#f92672">&#34;citySearch&#34;</span>:        <span style="color:#e6db74">&#34;kcdrrnxwk.execute-api.us-west-2.amazonaws.com/prod/getStoresInCity&#34;</span>,
-    <span style="color:#f92672">&#34;storeSearch&#34;</span>:       <span style="color:#e6db74">&#34;kcdrrnxwk.execute-api.us-west-2.amazonaws.com/prod/getStoreByName&#34;</span>,
-    <span style="color:#f92672">&#34;getInLineReasons&#34;</span>:  <span style="color:#e6db74">&#34;kcdrrnxwk.execute-api.us-west-2.amazonaws.com/dev/prod/getReasons&#34;</span>,
-
-    <span style="color:#f92672">&#34;addCustomerV2&#34;</span>: <span style="color:#e6db74">&#34;https://api.t-mobile.com/add-customer/v1/addCustomer&#34;</span>,
-    <span style="color:#f92672">&#34;getLeadInfo&#34;</span>:   <span style="color:#e6db74">&#34;https://api.t-mobile.com/customer-interaction/v1/get-lead?leadId={{leadId}}&#34;</span>,
-    <span style="color:#960050;background-color:#1e0010">...</span>
-</code></pre></div><p>This became a problem when we started creating more lower environments for testing and such. As the list of snowflake environments grew so did the effort to maintain all the proper configurations. If you needed to add a new configuration property you would have to add a copy to every environment specific configuration file. If you needed to change or add a property you would have to duplicate it in all environments, and possibly have different values in different environments. These permutations of configuration property settings made management of the various application deployment configurations fraught with human error.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#e6db74">&#34;url&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;mostPopularDevices&#34;</span>:         <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/search-promote/?type=browse&amp;&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;productBrowseDetailsLive&#34;</span>:   <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/search-promote/?type=browse&amp;pt=Device&amp;ps=Handset&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;accessoryBrowseDetailsLive&#34;</span>: <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/search-promote/?type=browse&amp;pt=Accessory&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;accessories&#34;</span>:                <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/search-promote/?type=browse&amp;pt=Accessory&amp;o=&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;compatibleAccessory&#34;</span>:        <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/search-promote/?type=browse&amp;pt=Accessory&amp;facets=true&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;authorization&#34;</span>:              <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/oauth/v1/access&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;updateProfile&#34;</span>:              <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/update-profile&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;ShippingOrderFees&#34;</span>:          <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/order/fees&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;simKitDetails&#34;</span>:              <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/productDetails/i-739C46ADBDEE4AE9ADE7BF05D984EAE1&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;shippingOptionsUrl&#34;</span>:         <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1/shipping-option/&#34;</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;creditCardInfo&#34;</span>:             <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/creditcards/orders&#34;</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;checkoutSetAddress&#34;</span>:         <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/v1/orders/{{orderID}}/address&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;creditcheckUrl&#34;</span>:             <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/v1/orders/creditcheck/&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;creditcardUrl&#34;</span>:              <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/v1/orders/creditcards/&#34;</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;getProfile&#34;</span>:                 <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/v1/profile&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;authorableCarousel&#34;</span>:         <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/v1/products&#34;</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;getDefaultCart&#34;</span>:             <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/v1/carts&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;removeAccessoryFromCart&#34;</span>:    <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/v1/carts/&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">&#34;addAccessoryToCart&#34;</span>:         <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/v1/carts/&#34;</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;storeLocator&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;search&#34;</span>:            <span style="color:#e6db74">&#34;kkcdrrnxwk.execute-api.us-west-2.amazonaws.com/dev/prod/getStoresByCoordinates&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;stateSearch&#34;</span>:       <span style="color:#e6db74">&#34;kcdrrnxwk.execute-api.us-west-2.amazonaws.com/prod/getStoresInState&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;citySearch&#34;</span>:        <span style="color:#e6db74">&#34;kcdrrnxwk.execute-api.us-west-2.amazonaws.com/prod/getStoresInCity&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;storeSearch&#34;</span>:       <span style="color:#e6db74">&#34;kcdrrnxwk.execute-api.us-west-2.amazonaws.com/prod/getStoreByName&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;getInLineReasons&#34;</span>:  <span style="color:#e6db74">&#34;kcdrrnxwk.execute-api.us-west-2.amazonaws.com/dev/prod/getReasons&#34;</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;addCustomerV2&#34;</span>: <span style="color:#e6db74">&#34;https://api.t-mobile.com/add-customer/v1/addCustomer&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;getLeadInfo&#34;</span>:   <span style="color:#e6db74">&#34;https://api.t-mobile.com/customer-interaction/v1/get-lead?leadId={{leadId}}&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#960050;background-color:#1e0010">...</span>
+</span></span></code></pre></div><p>This became a problem when we started creating more lower environments for testing and such. As the list of snowflake environments grew so did the effort to maintain all the proper configurations. If you needed to add a new configuration property you would have to add a copy to every environment specific configuration file. If you needed to change or add a property you would have to duplicate it in all environments, and possibly have different values in different environments. These permutations of configuration property settings made management of the various application deployment configurations fraught with human error.</p>
 <p>I tried to solve this problem by creating a hierarchical format to dry the config so that I could change a value in one place and have it apply across the app.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#e6db74">&#34;product&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> {
-  <span style="color:#f92672">&#34;stage&#34;</span>: <span style="color:#e6db74">&#34;http://stage.sp10050e1e.guided.ss-omtrdc.net&#34;</span>,
-  <span style="color:#f92672">&#34;host&#34;</span>: <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1&#34;</span>,
-  <span style="color:#f92672">&#34;browse&#34;</span>: {
-    <span style="color:#f92672">&#34;service&#34;</span>: <span style="color:#e6db74">&#34;/search-promote/&#34;</span>,
-    <span style="color:#f92672">&#34;parameters&#34;</span>: {
-      <span style="color:#f92672">&#34;phone&#34;</span>: <span style="color:#e6db74">&#34;?type=browse&amp;ps=handset&#34;</span>,
-      <span style="color:#f92672">&#34;accessory&#34;</span>: <span style="color:#e6db74">&#34;?type=browse&amp;pt=accessory&#34;</span>,
-      <span style="color:#f92672">&#34;internet-device&#34;</span>: <span style="color:#e6db74">&#34;?type=browse&amp;ps=wearable|tablet&#34;</span>
-    },
-  }
-</code></pre></div><p>This required the application to have the smarts to ‘compile’ these objects into complete urls.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#a6e22e">getPhoneCatalogUrl</span> <span style="color:#f92672">=</span>
-  <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">urls</span>.<span style="color:#a6e22e">product</span>.<span style="color:#a6e22e">host</span> <span style="color:#f92672">+</span>
-  <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">urls</span>.<span style="color:#a6e22e">product</span>.<span style="color:#a6e22e">browse</span>.<span style="color:#a6e22e">service</span> <span style="color:#f92672">+</span>
-  <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">urls</span>.<span style="color:#a6e22e">productbrowse</span>.<span style="color:#a6e22e">parameters</span>.<span style="color:#a6e22e">phone</span>;
-
-<span style="color:#75715e">// getPhoneCatalogUrl == &#34;https://pd01.api.t-mobile.com/raptor/v1/search-promote/?type=browse&amp;ps=handset/search-promote/?type=browse&amp;ps=handset&#34;
-</span></code></pre></div><h2 id="the-solution">The solution:</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#e6db74">&#34;product&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;stage&#34;</span>: <span style="color:#e6db74">&#34;http://stage.sp10050e1e.guided.ss-omtrdc.net&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;host&#34;</span>: <span style="color:#e6db74">&#34;https://pd01.api.t-mobile.com/raptor/v1&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;browse&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;service&#34;</span>: <span style="color:#e6db74">&#34;/search-promote/&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;parameters&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;phone&#34;</span>: <span style="color:#e6db74">&#34;?type=browse&amp;ps=handset&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;accessory&#34;</span>: <span style="color:#e6db74">&#34;?type=browse&amp;pt=accessory&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;internet-device&#34;</span>: <span style="color:#e6db74">&#34;?type=browse&amp;ps=wearable|tablet&#34;</span>
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>  }
+</span></span></code></pre></div><p>This required the application to have the smarts to ‘compile’ these objects into complete urls.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#a6e22e">getPhoneCatalogUrl</span> <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">urls</span>.<span style="color:#a6e22e">product</span>.<span style="color:#a6e22e">host</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">urls</span>.<span style="color:#a6e22e">product</span>.<span style="color:#a6e22e">browse</span>.<span style="color:#a6e22e">service</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">urls</span>.<span style="color:#a6e22e">productbrowse</span>.<span style="color:#a6e22e">parameters</span>.<span style="color:#a6e22e">phone</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// getPhoneCatalogUrl == &#34;https://pd01.api.t-mobile.com/raptor/v1/search-promote/?type=browse&amp;ps=handset/search-promote/?type=browse&amp;ps=handset&#34;
+</span></span></span></code></pre></div><h2 id="the-solution">The solution:</h2>
 <p>Percy started out as an attempt to solve this problem with a standard format that would allow me to condense the 4 or 5 configuration files duplicated across dozens of environments and combine them into a single, dry collection of properties that would be easy to update across all environments including specializations for individual environments.</p>
 <p>Another feature was to find a way that we could enable non-developer participants ( ops, web producers, managers etc) to modify these configuration files safely.</p>
 <p>I settled on the YAML format due to its support for comments, property types (for schema validation) as well as anchors and aliases. Having comments in a configuration file is very valuable as it allows developers to leave notes about individual properties, what they are for, when they should be enabled or removed (feature toggles) etc. Property types allow us to apply rules within our tools to validate proper config structure and content.</p>
 <p>While YAML turned out to be a great format for editing and storing the configurations it is a terrible format for transmission of the configs as it is a space delimited language, hence it cannot be minimized. Thus, we needed a tool that could “hydrate” these “dry” configuration files into a format that is optimized for http transport layer. In addition, we needed a form based tool that would enable anyone to edit these files safely. Even seasoned developers can mess up a yam file with an extra space, or a missing space. This has caused me countless hours of frustration scrubbing through a file trying to find the missing space.</p>
 <p>With Percy I was able to take 5 configuration files, like the one shown above, across 21 different environments for a total of 105 files, 1 copy for every deployed environment- each with only slight variations - all having a combined total of 980 KB of JSON, and de-hydrate them down to only 5 files with combined 56KB of dehydrated (DRY) yaml properties:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">default</span>: <span style="color:#75715e">!!map</span>
-  <span style="color:#f92672">_apiHost</span>: <span style="color:#75715e">!!str</span>                 <span style="color:#e6db74">&#34;pd01.api.t-mobile.com&#34;</span>
-  <span style="color:#f92672">_storeLocatorAPIHost</span>: <span style="color:#75715e">!!str</span>     <span style="color:#e6db74">&#34;pd03.api.t-mobile.com&#34;</span>
-  <span style="color:#f92672">_storeLocatorAWSAPIHost</span>: <span style="color:#75715e">!!str</span>  <span style="color:#e6db74">&#34;kkcdrrnxwk.execute-api.us-west-2.amazonaws.com/dev&#34;</span>
-
-  <span style="color:#f92672">url</span>: <span style="color:#75715e">!!map</span>
-    <span style="color:#f92672">mostPopularDevices</span>: <span style="color:#75715e">!!str</span> 	      <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/search-promote/?type=browse&amp;&#34;</span>
-    <span style="color:#f92672">productBrowseDetailsLive</span>: <span style="color:#75715e">!!str</span>   <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/search-promote/?type=browse&amp;pt=Device&amp;ps=Handset&#34;</span>
-    <span style="color:#f92672">accessoryBrowseDetailsLive</span>: <span style="color:#75715e">!!str</span> <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/search-promote/?type=browse&amp;pt=Accessory&#34;</span>
-    <span style="color:#f92672">accessories</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/search-promote/?type=browse&amp;pt=Accessory&amp;o=&#34;</span>
-    <span style="color:#f92672">compatibleAccessory</span>: <span style="color:#75715e">!!str</span>        <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/search-promote/?type=browse&amp;pt=Accessory&amp;facets=true&#34;</span>
-    <span style="color:#f92672">authorization</span>: <span style="color:#75715e">!!str</span>              <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/oauth/v1/access&#34;</span>
-    <span style="color:#f92672">updateProfile</span>: <span style="color:#75715e">!!str</span>              <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/update-profile&#34;</span>,
-    <span style="color:#f92672">ShippingOrderFees</span>: <span style="color:#75715e">!!str</span>          <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/order/fees&#34;</span>,
-    <span style="color:#f92672">simKitDetails</span>: <span style="color:#75715e">!!str</span>              <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/productDetails/i-739C46ADBDEE4AE9ADE7BF05D984EAE1&#34;</span>
-    <span style="color:#f92672">shippingOptionsUrl</span>: <span style="color:#75715e">!!str</span>         <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/shipping-option/&#34;</span>
-
-    <span style="color:#f92672">creditCardInfo</span>: <span style="color:#75715e">!!str</span>             <span style="color:#e6db74">&#34;https://${_apiHost}/creditcards/orders&#34;</span>
-
-    <span style="color:#f92672">checkoutSetAddress</span>: <span style="color:#75715e">!!str</span>         <span style="color:#e6db74">&#34;https://${_apiHost}/v1/orders/{{orderID}}/address&#34;</span>
-    <span style="color:#f92672">creditcheckUrl</span>: <span style="color:#75715e">!!str</span>             <span style="color:#e6db74">&#34;https://${_apiHost}/v1/orders/creditcheck/&#34;</span>
-    <span style="color:#f92672">creditcardUrl</span>: <span style="color:#75715e">!!str</span>              <span style="color:#e6db74">&#34;https://${_apiHost}/v1/orders/creditcards/&#34;</span>
-
-    <span style="color:#f92672">getProfile</span>: <span style="color:#75715e">!!str</span>                 <span style="color:#e6db74">&#34;https://${_apiHost}/v1/profile&#34;</span>
-    <span style="color:#f92672">authorableCarousel</span>: <span style="color:#75715e">!!str</span>         <span style="color:#e6db74">&#34;https://${_apiHost}/v1/products&#34;</span>
-
-    <span style="color:#f92672">getDefaultCart</span>: <span style="color:#75715e">!!str</span>             <span style="color:#e6db74">&#34;https://${_apiHost}/v1/carts&#34;</span>
-    <span style="color:#f92672">removeAccessoryFromCart</span>: <span style="color:#75715e">!!str</span>    <span style="color:#e6db74">&#34;https://${_apiHost}/v1/carts/&#34;</span>
-    <span style="color:#f92672">addAccessoryToCart</span>: <span style="color:#75715e">!!str</span>         <span style="color:#e6db74">&#34;https://${_apiHost}/v1/carts/&#34;</span>
-
-  <span style="color:#f92672">storeLocator</span>: <span style="color:#75715e">!!map</span>
-    <span style="color:#f92672">search</span>: <span style="color:#75715e">!!str</span>                     <span style="color:#e6db74">&#34;https://${_storeLocatorAWSAPIHost}/getStoresByCoordinates&#34;</span>
-    <span style="color:#f92672">stateSearch</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;https://${_storeLocatorAWSAPIHost}/getStoresInState&#34;</span>
-    <span style="color:#f92672">citySearch</span>: <span style="color:#75715e">!!str</span>                 <span style="color:#e6db74">&#34;https://${_storeLocatorAWSAPIHost}/getStoresInCity&#34;</span>
-    <span style="color:#f92672">storeSearch</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;https://${_storeLocatorAWSAPIHost}/getStoreByName&#34;</span>
-    <span style="color:#f92672">getInLineReasons</span>: <span style="color:#75715e">!!str</span>           <span style="color:#e6db74">&#34;https://${_storeLocatorAWSAPIHost}/getReasons&#34;</span>
-    <span style="color:#f92672">addCustomerV2</span>: <span style="color:#75715e">!!str</span>              <span style="color:#e6db74">&#34;https://${_storeLocatorAPIHost}/add-customer/v1/addCustomer&#34;</span>
-    <span style="color:#f92672">getLeadInfo</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;https://${_storeLocatorAPIHost}/customer-interaction/v1/get-lead?leadId={{leadId}}&#34;</span>
-  <span style="color:#ae81ff">...</span>
-</code></pre></div><p>There is still duplication in this file but it uses variable substitution, so I can edit the value of _apiHost in one location at the top of the file to modify every reference.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">default</span>: <span style="color:#75715e">!!map</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">_apiHost</span>: <span style="color:#75715e">!!str</span>                 <span style="color:#e6db74">&#34;pd01.api.t-mobile.com&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">_storeLocatorAPIHost</span>: <span style="color:#75715e">!!str</span>     <span style="color:#e6db74">&#34;pd03.api.t-mobile.com&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">_storeLocatorAWSAPIHost</span>: <span style="color:#75715e">!!str</span>  <span style="color:#e6db74">&#34;kkcdrrnxwk.execute-api.us-west-2.amazonaws.com/dev&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">url</span>: <span style="color:#75715e">!!map</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">mostPopularDevices</span>: <span style="color:#75715e">!!str</span> 	      <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/search-promote/?type=browse&amp;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">productBrowseDetailsLive</span>: <span style="color:#75715e">!!str</span>   <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/search-promote/?type=browse&amp;pt=Device&amp;ps=Handset&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">accessoryBrowseDetailsLive</span>: <span style="color:#75715e">!!str</span> <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/search-promote/?type=browse&amp;pt=Accessory&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">accessories</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/search-promote/?type=browse&amp;pt=Accessory&amp;o=&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">compatibleAccessory</span>: <span style="color:#75715e">!!str</span>        <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/search-promote/?type=browse&amp;pt=Accessory&amp;facets=true&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">authorization</span>: <span style="color:#75715e">!!str</span>              <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/oauth/v1/access&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">updateProfile</span>: <span style="color:#75715e">!!str</span>              <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/update-profile&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ShippingOrderFees</span>: <span style="color:#75715e">!!str</span>          <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/order/fees&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">simKitDetails</span>: <span style="color:#75715e">!!str</span>              <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/productDetails/i-739C46ADBDEE4AE9ADE7BF05D984EAE1&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">shippingOptionsUrl</span>: <span style="color:#75715e">!!str</span>         <span style="color:#e6db74">&#34;https://${_apiHost}/raptor/v1/shipping-option/&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">creditCardInfo</span>: <span style="color:#75715e">!!str</span>             <span style="color:#e6db74">&#34;https://${_apiHost}/creditcards/orders&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">checkoutSetAddress</span>: <span style="color:#75715e">!!str</span>         <span style="color:#e6db74">&#34;https://${_apiHost}/v1/orders/{{orderID}}/address&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">creditcheckUrl</span>: <span style="color:#75715e">!!str</span>             <span style="color:#e6db74">&#34;https://${_apiHost}/v1/orders/creditcheck/&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">creditcardUrl</span>: <span style="color:#75715e">!!str</span>              <span style="color:#e6db74">&#34;https://${_apiHost}/v1/orders/creditcards/&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">getProfile</span>: <span style="color:#75715e">!!str</span>                 <span style="color:#e6db74">&#34;https://${_apiHost}/v1/profile&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">authorableCarousel</span>: <span style="color:#75715e">!!str</span>         <span style="color:#e6db74">&#34;https://${_apiHost}/v1/products&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">getDefaultCart</span>: <span style="color:#75715e">!!str</span>             <span style="color:#e6db74">&#34;https://${_apiHost}/v1/carts&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">removeAccessoryFromCart</span>: <span style="color:#75715e">!!str</span>    <span style="color:#e6db74">&#34;https://${_apiHost}/v1/carts/&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">addAccessoryToCart</span>: <span style="color:#75715e">!!str</span>         <span style="color:#e6db74">&#34;https://${_apiHost}/v1/carts/&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">storeLocator</span>: <span style="color:#75715e">!!map</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">search</span>: <span style="color:#75715e">!!str</span>                     <span style="color:#e6db74">&#34;https://${_storeLocatorAWSAPIHost}/getStoresByCoordinates&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">stateSearch</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;https://${_storeLocatorAWSAPIHost}/getStoresInState&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">citySearch</span>: <span style="color:#75715e">!!str</span>                 <span style="color:#e6db74">&#34;https://${_storeLocatorAWSAPIHost}/getStoresInCity&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">storeSearch</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;https://${_storeLocatorAWSAPIHost}/getStoreByName&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">getInLineReasons</span>: <span style="color:#75715e">!!str</span>           <span style="color:#e6db74">&#34;https://${_storeLocatorAWSAPIHost}/getReasons&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">addCustomerV2</span>: <span style="color:#75715e">!!str</span>              <span style="color:#e6db74">&#34;https://${_storeLocatorAPIHost}/add-customer/v1/addCustomer&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">getLeadInfo</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;https://${_storeLocatorAPIHost}/customer-interaction/v1/get-lead?leadId={{leadId}}&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span></code></pre></div><p>There is still duplication in this file but it uses variable substitution, so I can edit the value of _apiHost in one location at the top of the file to modify every reference.</p>
 <p>Then to modify specific attributes for various deployed environments we append an <code>environments</code> map with sub properties for every environment that wants to change the default settings.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">environments</span>: <span style="color:#75715e">!!map</span>
-
-  <span style="color:#f92672">dailydev</span>: <span style="color:#75715e">!!map</span>
-    <span style="color:#f92672">_storeLocatorAPIHost</span>:         <span style="color:#e6db74">&#34;pd03.api.t-mobile.com&#34;</span>
-
-  <span style="color:#f92672">demo</span>: <span style="color:#75715e">!!map</span>
-    <span style="color:#f92672">_apiHost</span>: <span style="color:#75715e">!!str</span>               <span style="color:#e6db74">&#34;pd02.api.t-mobile.com&#34;</span>
-    <span style="color:#f92672">_storeLocatorAPIHost</span>: <span style="color:#75715e">!!str</span>   <span style="color:#e6db74">&#34;pd03.api.t-mobile.com&#34;</span>
-
-  <span style="color:#f92672">devprd</span>: <span style="color:#75715e">!!map</span>
-    <span style="color:#f92672">_apiHost</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;qat03-pd.api.t-mobile.com&#34;</span>
-    <span style="color:#f92672">_storeLocatorAWSAPIHost</span>: <span style="color:#75715e">!!str</span> <span style="color:#e6db74">&#34;md14ltwri9.execute-api.us-west-2.amazonaws.com/dev&#34;</span>
-
-  <span style="color:#f92672">local</span>: <span style="color:#75715e">!!map</span>
-    <span style="color:#f92672">_apiHost</span>: <span style="color:#75715e">!!str</span>               <span style="color:#e6db74">&#34;pd02.api.t-mobile.com&#34;</span>
-    <span style="color:#f92672">_storeLocatorAPIHost</span>: <span style="color:#75715e">!!str</span>   <span style="color:#e6db74">&#34;qat03-pd.api.t-mobile.com&#34;</span>
-
-  <span style="color:#f92672">prod</span>: <span style="color:#75715e">!!map</span>
-    <span style="color:#f92672">_apiHost</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;api.t-mobile.com&#34;</span>
-    <span style="color:#f92672">_storeLocatorAPIHost</span>: <span style="color:#75715e">!!str</span>    <span style="color:#e6db74">&#34;api.t-mobile.com&#34;</span>
-    <span style="color:#f92672">_storeLocatorAWSAPIHost</span>: <span style="color:#75715e">!!str</span> <span style="color:#e6db74">&#34;onmyj41p3c.execute-api.us-west-2.amazonaws.com/prod&#34;</span>
-
-  <span style="color:#f92672">qat</span>: <span style="color:#75715e">!!map</span>
-    <span style="color:#f92672">_apiHost</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;api.t-mobile.com&#34;</span>
-    <span style="color:#f92672">_storeLocatorAPIHost</span>: <span style="color:#75715e">!!str</span>    <span style="color:#e6db74">&#34;qat03-pd.api.t-mobile.com&#34;</span>
-
-  <span style="color:#f92672">qatprd</span>: <span style="color:#75715e">!!map</span>
-    <span style="color:#f92672">_apiHost</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;pd03.api.t-mobile.com&#34;</span>
-    <span style="color:#f92672">_storeLocatorAWSAPIHost</span>: <span style="color:#75715e">!!str</span> <span style="color:#e6db74">&#34;md14ltwri9.execute-api.us-west-2.amazonaws.com/dev&#34;</span>
-
-  <span style="color:#f92672">stage</span>: <span style="color:#75715e">!!map</span>
-    <span style="color:#f92672">_apiHost</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;api.t-mobile.com&#34;</span>
-    <span style="color:#f92672">_storeLocatorAPIHost</span>: <span style="color:#75715e">!!str</span>    <span style="color:#e6db74">&#34;api.t-mobile.com&#34;</span>
-  <span style="color:#ae81ff">...</span>
-</code></pre></div><p>This allows me to show a simple list of every deployed environment and how each is different from the default configuration, instead of copying the entire file and modifying values throughout the file to match the new deployed environment.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">environments</span>: <span style="color:#75715e">!!map</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">dailydev</span>: <span style="color:#75715e">!!map</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">_storeLocatorAPIHost</span>:         <span style="color:#e6db74">&#34;pd03.api.t-mobile.com&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">demo</span>: <span style="color:#75715e">!!map</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">_apiHost</span>: <span style="color:#75715e">!!str</span>               <span style="color:#e6db74">&#34;pd02.api.t-mobile.com&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">_storeLocatorAPIHost</span>: <span style="color:#75715e">!!str</span>   <span style="color:#e6db74">&#34;pd03.api.t-mobile.com&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">devprd</span>: <span style="color:#75715e">!!map</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">_apiHost</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;qat03-pd.api.t-mobile.com&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">_storeLocatorAWSAPIHost</span>: <span style="color:#75715e">!!str</span> <span style="color:#e6db74">&#34;md14ltwri9.execute-api.us-west-2.amazonaws.com/dev&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">local</span>: <span style="color:#75715e">!!map</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">_apiHost</span>: <span style="color:#75715e">!!str</span>               <span style="color:#e6db74">&#34;pd02.api.t-mobile.com&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">_storeLocatorAPIHost</span>: <span style="color:#75715e">!!str</span>   <span style="color:#e6db74">&#34;qat03-pd.api.t-mobile.com&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">prod</span>: <span style="color:#75715e">!!map</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">_apiHost</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;api.t-mobile.com&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">_storeLocatorAPIHost</span>: <span style="color:#75715e">!!str</span>    <span style="color:#e6db74">&#34;api.t-mobile.com&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">_storeLocatorAWSAPIHost</span>: <span style="color:#75715e">!!str</span> <span style="color:#e6db74">&#34;onmyj41p3c.execute-api.us-west-2.amazonaws.com/prod&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">qat</span>: <span style="color:#75715e">!!map</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">_apiHost</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;api.t-mobile.com&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">_storeLocatorAPIHost</span>: <span style="color:#75715e">!!str</span>    <span style="color:#e6db74">&#34;qat03-pd.api.t-mobile.com&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">qatprd</span>: <span style="color:#75715e">!!map</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">_apiHost</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;pd03.api.t-mobile.com&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">_storeLocatorAWSAPIHost</span>: <span style="color:#75715e">!!str</span> <span style="color:#e6db74">&#34;md14ltwri9.execute-api.us-west-2.amazonaws.com/dev&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">stage</span>: <span style="color:#75715e">!!map</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">_apiHost</span>: <span style="color:#75715e">!!str</span>                <span style="color:#e6db74">&#34;api.t-mobile.com&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">_storeLocatorAPIHost</span>: <span style="color:#75715e">!!str</span>    <span style="color:#e6db74">&#34;api.t-mobile.com&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span></code></pre></div><p>This allows me to show a simple list of every deployed environment and how each is different from the default configuration, instead of copying the entire file and modifying values throughout the file to match the new deployed environment.</p>
 <h2 id="percy-project">Percy Project</h2>
 <p>The Percy project comes in 2 parts:</p>
 <ul>
@@ -288,12 +288,12 @@
 <!-- raw HTML omitted -->
 <h3 id="editor-settings">Editor settings:</h3>
 <p>The editor uses a settings file called <code>.percyrc</code>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
-  <span style="color:#f92672">&#34;variablePrefix&#34;</span>: <span style="color:#e6db74">&#34;${&#34;</span>,
-  <span style="color:#f92672">&#34;variableSuffix&#34;</span>: <span style="color:#e6db74">&#34;}&#34;</span>,
-  <span style="color:#f92672">&#34;variableNamePrefix&#34;</span>: <span style="color:#e6db74">&#34;_&#34;</span>
-}
-</code></pre></div><p>This file lists out some simple rules for all configuration files listed within the same directory as the .percyrc file. This settings file will cascade values across hierarchical directory structures.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;variablePrefix&#34;</span>: <span style="color:#e6db74">&#34;${&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;variableSuffix&#34;</span>: <span style="color:#e6db74">&#34;}&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;variableNamePrefix&#34;</span>: <span style="color:#e6db74">&#34;_&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This file lists out some simple rules for all configuration files listed within the same directory as the .percyrc file. This settings file will cascade values across hierarchical directory structures.</p>
 <p>i.e. mono repo of multiple apps with different styles. The root level can define overall editor settings, but each subfolder defining an application can override those settings with settings of their own.</p>
 <p>Currently this file supports settings for variable naming conventions (explained later).
 Environment Definitions:</p>
@@ -317,7 +317,7 @@ Environment Definitions:</p>
 <p>This includes any properties or values that are required to define where are all the assets and services that are deployed in an environment, and how access them. This file can be used by a CI processor to automate deployments and maintenance tasks for any environment.</p>
 <h3 id="default-properties">Default properties:</h3>
 <p>The default section of any configuration file, including the <code>environments.yaml</code> file, lists all the key:value pairs, in a hierarchical format, that defines the application configurable runtime value as required by your application. This can include API urls, Feature Toggles, Cache settings, even changes to labels and static text displayed within the application.</p>
-<p><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
 <p>To help with normalization of this file, to DRY the contents, we utilize 3 features:</p>
 <ul>
 <li>Variable Substitution</li>
@@ -329,7 +329,7 @@ Environment Definitions:</p>
 <p>Values in the <code>.percyrc</code> file determine what characters are used to wrap string interpolated values (when using variable substitution). Above we use <code>${ … }</code> to wrap a variable inside a string value. We also prefix the variable name with <code>_</code> to identify this as a transient variable (a key that is used for variable substitution only and is not to appear by itself in the hydrated file.)</p>
 <h3 id="property-comments">Property Comments</h3>
 <p>Yes, you can add comments to properties to help identify what they are used for. This can include detailed multi-line comments to describe use, constraints, author, feature or even when to expire use of that property (feature toggles).</p>
-<p><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
 <!-- raw HTML omitted -->
 <h3 id="environment-properties">Environment properties:</h3>
 <p>Once all the allowed property keys with default values are defined in the default section we need to list how each of our deployed environments differs from the default settings. To do this we add an environment node to our configuration files environments section.</p>
@@ -359,15 +359,15 @@ Environment Definitions:</p>
 </ul>
 </li>
 </ol>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">environments</span>: <span style="color:#75715e">!!map</span>
-  <span style="color:#f92672">local</span>: <span style="color:#75715e">!!map</span>
-    <span style="color:#f92672">httpCacheConfig</span>: <span style="color:#75715e">!!map</span>
-      <span style="color:#f92672">cacheUrls</span>: <span style="color:#75715e">!!seq</span>
-        - <span style="color:#75715e">*cacheUrls-0</span>
-        - <span style="color:#75715e">!!map</span>
-          <span style="color:#f92672">&lt;&lt;</span>: <span style="color:#75715e">*cacheUrls-2</span>
-          <span style="color:#f92672">expireInMs</span>: <span style="color:#75715e">!!int</span> <span style="color:#ae81ff">500</span>
-</code></pre></div><p>With the editor you can view the yaml format of any environment section. In this image we are showing the <code>prod</code> environment yaml settings, as stored in the yaml file.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">environments</span>: <span style="color:#75715e">!!map</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">local</span>: <span style="color:#75715e">!!map</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">httpCacheConfig</span>: <span style="color:#75715e">!!map</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">cacheUrls</span>: <span style="color:#75715e">!!seq</span>
+</span></span><span style="display:flex;"><span>        - <span style="color:#75715e">*cacheUrls-0</span>
+</span></span><span style="display:flex;"><span>        - <span style="color:#75715e">!!map</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&lt;&lt;</span>: <span style="color:#75715e">*cacheUrls-2</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">expireInMs</span>: <span style="color:#75715e">!!int</span> <span style="color:#ae81ff">500</span>
+</span></span></code></pre></div><p>With the editor you can view the yaml format of any environment section. In this image we are showing the <code>prod</code> environment yaml settings, as stored in the yaml file.</p>
 <!-- raw HTML omitted -->
 <p>Then you can right click either the environment name or the <code>...</code> icon to get the <em>context menu</em>, select <em>&ldquo;View Compiled YAML&rdquo;</em> to see how all the inherited settings and variable interpolation will cascade into a final, hydrated yaml file.</p>
 <!-- raw HTML omitted -->
@@ -384,7 +384,7 @@ Environment Definitions:</p>
             </div>
             <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -1355,7 +1355,7 @@ Environment Definitions:</p>
             </div>
             <div class="content-right">
 			          
-                  <a class="footer-links" href="https://tmo-oss-getinvite.herokuapp.com/" target="_blank"><i class="fa fa-slack"></i></a>
+                  <a class="footer-links" href="https://gitter.im/tmobile/" target="_blank"><i class="fa fa-gitter"></i></a>
                 
                   <a class="footer-links" href="https://www.youtube.com/playlist?list=PL0mz2nejZ-DgH0XsbYDrKPbeMiEJYWqUg" target="_blank"><i class="fa fa-youtube"></i></a>
                 
@@ -1364,7 +1364,7 @@ Environment Definitions:</p>
         <div class="mobile_version_content" style="width: 100%;">
             
                 <div class="mobile_version margin">
-                    <a class="footer-links" href="https://tmo-oss-getinvite.herokuapp.com/" target="_blank"><i style="min-width: 34px;" class="fa fa-slack"></i></a>
+                    <a class="footer-links" href="https://gitter.im/tmobile/" target="_blank"><i style="min-width: 34px;" class="fa fa-gitter"></i></a>
                 </div>
             
                 <div class="mobile_version margin">

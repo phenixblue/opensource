@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="author" content="T-Mobile">
 <meta name="description" content="Open source at the Un-carrier.">
-<meta name="generator" content="Hugo 0.84.4" />
+<meta name="generator" content="Hugo 0.96.0" />
 <title>T-Mobile Open Source</title>
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32" />
@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css" type="text/css" />
 
 <!-- Custom Fonts -->
-<link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" type="text/css" />
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' />
 <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css' />
 
@@ -135,9 +135,9 @@
 <p>Implementation with a Spring Boot application couldn’t be easier as the configuration class is prebuilt and annotated for auto wiring. If you don’t wish to use Spring then configure through a standard Builder pattern. Checkout the <a href="https://github.com/tmobile/casquatch/blob/master/README.md">README.md</a> for a full breakdown.</p>
 <p>To show you how easy it is to get going with Spring here are the basic steps:</p>
 <p>Create an artifact for your data model using the included code generator through a simple shell script (Manual steps in <a href="https://github.com/tmobile/casquatch/blob/master/README.md">README.md</a> if you don’t have bash):</p>
-<pre><code>./install.sh &lt;KEYSPACE&gt;
+<pre tabindex="0"><code>./install.sh &lt;KEYSPACE&gt;
 </code></pre><p>Copy and paste the maven artifacts into the pom</p>
-<pre><code>&lt;dependency&gt;
+<pre tabindex="0"><code>&lt;dependency&gt;
     &lt;groupId&gt;com.tmobile.opensource.casquatch&lt;/groupId&gt;
     &lt;artifactId&gt;CassandraDriver&lt;/artifactId&gt;
     &lt;version&gt;1.2-RELEASE&lt;/version&gt;
@@ -148,13 +148,13 @@
     &lt;version&gt;1.2-RELEASE&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre><p>Add the configuration import in Application.java:</p>
-<pre><code>@Import(CassandraDriverSpringConfiguration.class)
+<pre tabindex="0"><code>@Import(CassandraDriverSpringConfiguration.class)
 </code></pre><p>Configure a couple application.properties (See <a href="https://github.com/tmobile/casquatch/blob/master/README.md#configuration">README.md#Configuration</a>):</p>
-<pre><code>cassandraDriver.contactPoints=localhost
+<pre tabindex="0"><code>cassandraDriver.contactPoints=localhost
 cassandraDriver.localDC=local
 cassandraDriver.keyspace=&lt;KEYSPACE&gt;
 </code></pre><p>Add an @Autowired variable to your controller:</p>
-<pre><code>@Autowired
+<pre tabindex="0"><code>@Autowired
 private CassandraDriver db;
 </code></pre><p>Then you are good to go. Checkout the <a href="https://tmobile.github.io/casquatch">javadocs</a> for the API or the <a href="https://www.youtube.com/watch?v=XNVZFzTsM04">demo video</a> for more information.</p>
 <h1 id="open-source-only--you-get-it-all">Open Source Only – You Get It All</h1>
@@ -165,7 +165,7 @@ private CassandraDriver db;
             </div>
             <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -1136,7 +1136,7 @@ private CassandraDriver db;
             </div>
             <div class="content-right">
 			          
-                  <a class="footer-links" href="https://tmo-oss-getinvite.herokuapp.com/" target="_blank"><i class="fa fa-slack"></i></a>
+                  <a class="footer-links" href="https://gitter.im/tmobile/" target="_blank"><i class="fa fa-gitter"></i></a>
                 
                   <a class="footer-links" href="https://www.youtube.com/playlist?list=PL0mz2nejZ-DgH0XsbYDrKPbeMiEJYWqUg" target="_blank"><i class="fa fa-youtube"></i></a>
                 
@@ -1145,7 +1145,7 @@ private CassandraDriver db;
         <div class="mobile_version_content" style="width: 100%;">
             
                 <div class="mobile_version margin">
-                    <a class="footer-links" href="https://tmo-oss-getinvite.herokuapp.com/" target="_blank"><i style="min-width: 34px;" class="fa fa-slack"></i></a>
+                    <a class="footer-links" href="https://gitter.im/tmobile/" target="_blank"><i style="min-width: 34px;" class="fa fa-gitter"></i></a>
                 </div>
             
                 <div class="mobile_version margin">

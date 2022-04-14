@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="author" content="T-Mobile">
 <meta name="description" content="Open source at the Un-carrier.">
-<meta name="generator" content="Hugo 0.84.4" />
+<meta name="generator" content="Hugo 0.96.0" />
 <title>T-Mobile Open Source</title>
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32" />
@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css" type="text/css" />
 
 <!-- Custom Fonts -->
-<link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" type="text/css" />
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' />
 <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css' />
 
@@ -158,13 +158,13 @@
 <li>
 <p><strong>Web Application</strong>:
 Web application can be developed on angular, react, vanilla javascript etc. Basically it should have code or framework ability to load the toggles before it loads other resources that depends on the toggles. In my case, I am using the APP_INITIALIZER ability of Angular Framework to fetch toggles before web application is loaded. Since this is an SPA (Single Page Application), we will fetch the toggles only once. We can simply add a new module that handles fetching remote toggles and overriding default toggles. After that, use the factory in the app.module.ts as shown below.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">providers:</span> [
-    {
-        <span style="color:#960050;background-color:#1e0010">provide:</span> <span style="color:#960050;background-color:#1e0010">APP_INITIALIZER,</span> <span style="color:#960050;background-color:#1e0010">useFactory:</span> <span style="color:#960050;background-color:#1e0010">TogglesModule.togglesProviderFactory,</span>
-        <span style="color:#960050;background-color:#1e0010">deps:</span> <span style="color:#960050;background-color:#1e0010">[TogglesService],</span> <span style="color:#960050;background-color:#1e0010">multi:</span> <span style="color:#960050;background-color:#1e0010">true</span>
-    }
-]
-</code></pre></div></li>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">providers:</span> [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">provide:</span> <span style="color:#960050;background-color:#1e0010">APP_INITIALIZER,</span> <span style="color:#960050;background-color:#1e0010">useFactory:</span> <span style="color:#960050;background-color:#1e0010">TogglesModule.togglesProviderFactory,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">deps:</span> <span style="color:#960050;background-color:#1e0010">[TogglesService],</span> <span style="color:#960050;background-color:#1e0010">multi:</span> <span style="color:#960050;background-color:#1e0010">true</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>]
+</span></span></code></pre></div></li>
 <li>
 <p><strong>Spring Boot Client Services</strong>:
 Spring boot client services are services implemented using spring boot framework using spring config client functionality that connects to spring boot config server to get configurations needed to run the service. Our toggles will be part of configurations available to all spring boot client services through spring config server. See <a href="https://spring.io/guides/gs/centralized-configuration/">https://spring.io/guides/gs/centralized-configuration/</a>.</p>
@@ -222,7 +222,7 @@ Thanks to all teams that created tools I used to create this feature toggle syst
             </div>
             <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -1193,7 +1193,7 @@ Thanks to all teams that created tools I used to create this feature toggle syst
             </div>
             <div class="content-right">
 			          
-                  <a class="footer-links" href="https://tmo-oss-getinvite.herokuapp.com/" target="_blank"><i class="fa fa-slack"></i></a>
+                  <a class="footer-links" href="https://gitter.im/tmobile/" target="_blank"><i class="fa fa-gitter"></i></a>
                 
                   <a class="footer-links" href="https://www.youtube.com/playlist?list=PL0mz2nejZ-DgH0XsbYDrKPbeMiEJYWqUg" target="_blank"><i class="fa fa-youtube"></i></a>
                 
@@ -1202,7 +1202,7 @@ Thanks to all teams that created tools I used to create this feature toggle syst
         <div class="mobile_version_content" style="width: 100%;">
             
                 <div class="mobile_version margin">
-                    <a class="footer-links" href="https://tmo-oss-getinvite.herokuapp.com/" target="_blank"><i style="min-width: 34px;" class="fa fa-slack"></i></a>
+                    <a class="footer-links" href="https://gitter.im/tmobile/" target="_blank"><i style="min-width: 34px;" class="fa fa-gitter"></i></a>
                 </div>
             
                 <div class="mobile_version margin">

@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="author" content="T-Mobile">
 <meta name="description" content="Open source at the Un-carrier.">
-<meta name="generator" content="Hugo 0.84.4" />
+<meta name="generator" content="Hugo 0.96.0" />
 <title>T-Mobile Open Source</title>
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32" />
@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css" type="text/css" />
 
 <!-- Custom Fonts -->
-<link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" type="text/css" />
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' />
 <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css' />
 
@@ -131,26 +131,26 @@
 <p>Every language has design patterns, which help us to organize our code in a way, where it’s easy to understand, maintain and test. JavaScript being one of the most commonly used dynamic languages, is also one of the most abused and misunderstood ;). In this post I want to share some examples of how code is written and how can it be improved to make it more flexible which is easy to maintain and follow.</p>
 <h1 id="bad-coding-patterns">Bad coding patterns</h1>
 <p>In JavaScript, lot of times we tend to write code using if/else or switch/case, when we have to use branching in multiple places. We end up writing too much logic which ends up being repetitive. Let’s take a look at an example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript">
-<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">getService</span>(<span style="color:#a6e22e">svcType</span>, <span style="color:#a6e22e">options</span>) {
-    <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">svcType</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#39;api&#39;</span>) {
-        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Hello from api&#34;</span>);
-        <span style="color:#75715e">//more logic to handle api specific scenario
-</span><span style="color:#75715e"></span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">svcType</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#39;lambda&#39;</span>) {
-        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Hello from lambda&#34;</span>);
-        <span style="color:#75715e">//more logic to handle lambda specific scenario
-</span><span style="color:#75715e"></span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">svcType</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#39;website&#39;</span>) {
-        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Hello from website&#34;</span>);
-        <span style="color:#75715e">//more logic to handle website specific scenario
-</span><span style="color:#75715e"></span>    } <span style="color:#66d9ef">else</span> {
-        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Invalid service type provided&#34;</span>);
-        <span style="color:#75715e">//more logic to handle default/error scenario
-</span><span style="color:#75715e"></span>    }
-}
-
-<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">options</span> <span style="color:#f92672">=</span> { <span style="color:#e6db74">&#39;arn&#39;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;arnString&#39;</span> };
-<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">serviceData</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">getService</span>(<span style="color:#e6db74">&#39;lambda&#39;</span>, <span style="color:#a6e22e">options</span>);
-</code></pre></div><p>The code above checks for the service type and then performs the business logic for the appropriate service. There are a few issues with this approach</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">getService</span>(<span style="color:#a6e22e">svcType</span>, <span style="color:#a6e22e">options</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">svcType</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#39;api&#39;</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Hello from api&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//more logic to handle api specific scenario
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">svcType</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#39;lambda&#39;</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Hello from lambda&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//more logic to handle lambda specific scenario
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">svcType</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#39;website&#39;</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Hello from website&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//more logic to handle website specific scenario
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Invalid service type provided&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//more logic to handle default/error scenario
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">options</span> <span style="color:#f92672">=</span> { <span style="color:#e6db74">&#39;arn&#39;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;arnString&#39;</span> };
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">serviceData</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">getService</span>(<span style="color:#e6db74">&#39;lambda&#39;</span>, <span style="color:#a6e22e">options</span>);
+</span></span></code></pre></div><p>The code above checks for the service type and then performs the business logic for the appropriate service. There are a few issues with this approach</p>
 <ul>
 <li>Every time you add a new service you need to update this if/else to handle the logic for that. Imagine if this kind of logic is put in multiple files/module. This will become unmaintainable very soon.</li>
 <li>The check has to be performed every time until the specific if/else block condition is satisfied. This is not efficient if you have a huge if/else block.</li>
@@ -159,79 +159,79 @@
 </ul>
 <p>Another way I have seen this being done is using switch statement. Let’s take a look at it below</p>
 <p>This code is similar to the one above and has similar issues. If for any reason you forget to put a break statement then the code falls through to the next case statement which is a side effect of using switch.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript">
-<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">getService</span>(<span style="color:#a6e22e">svcType</span>, <span style="color:#a6e22e">options</span>) {
-    <span style="color:#66d9ef">switch</span>(<span style="color:#a6e22e">svcType</span>) {
-        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;api&#39;</span><span style="color:#f92672">:</span>
-            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Hello from api&#34;</span>);
-            <span style="color:#75715e">//more logic to handle api specific scenario
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">break</span>;
-        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;lambda&#39;</span><span style="color:#f92672">:</span>
-            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Hello from lambda&#34;</span>);
-            <span style="color:#75715e">//more logic to handle lambda specific scenario
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">break</span>;
-        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;website&#39;</span><span style="color:#f92672">:</span>
-            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Hello from website&#34;</span>);
-            <span style="color:#75715e">//more logic to handle lambda specific scenario
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">break</span>;
-        <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
-            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Call some default service&#34;</span>);
-            <span style="color:#75715e">//more logic to handle default/error scenario
-</span><span style="color:#75715e"></span>    }
-}
-
-<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">options</span> <span style="color:#f92672">=</span> { <span style="color:#e6db74">&#39;arn&#39;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;arnString&#39;</span> };
-<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">serviceData</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">getService</span>(<span style="color:#e6db74">&#39;lambda&#39;</span>, <span style="color:#a6e22e">options</span>);
-</code></pre></div><h1 id="factory-pattern-with-classes">Factory pattern (with classes)</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">getService</span>(<span style="color:#a6e22e">svcType</span>, <span style="color:#a6e22e">options</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">switch</span>(<span style="color:#a6e22e">svcType</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;api&#39;</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Hello from api&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//more logic to handle api specific scenario
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;lambda&#39;</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Hello from lambda&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//more logic to handle lambda specific scenario
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;website&#39;</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Hello from website&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//more logic to handle lambda specific scenario
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Call some default service&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//more logic to handle default/error scenario
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">options</span> <span style="color:#f92672">=</span> { <span style="color:#e6db74">&#39;arn&#39;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;arnString&#39;</span> };
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">serviceData</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">getService</span>(<span style="color:#e6db74">&#39;lambda&#39;</span>, <span style="color:#a6e22e">options</span>);
+</span></span></code></pre></div><h1 id="factory-pattern-with-classes">Factory pattern (with classes)</h1>
 <p>Factory, in real word manufactures products and in software it manufactures objects. Let’s see how we can improve this code by using a factory class that uses object mapping and modules. I am also using some convention, to make it simpler which will be easier to maintain. The service type is also the name of the module, thus taking away the if/else logic and making the code more concise.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">//index.js
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">ServiceFactory</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;./ServiceFactory&#39;</span>);
-<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">svcFactory</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ServiceFactory</span>();
-<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">options</span> <span style="color:#f92672">=</span> { <span style="color:#e6db74">&#39;name&#39;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Service Name&#39;</span> };
-<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">generateService</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">svcFactory</span>.<span style="color:#a6e22e">getService</span>(<span style="color:#e6db74">&#39;api&#39;</span>);
-
-<span style="color:#75715e">//more logic here and late execution
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">generateService</span>(<span style="color:#a6e22e">options</span>);
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">//ServiceFactory.js
-</span><span style="color:#75715e"></span><span style="color:#75715e">/* get the service given the type and options using factory*/</span>
-<span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ServiceFactory</span> {
-    <span style="color:#a6e22e">constructor</span>() {
-        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">serviceTypes</span> <span style="color:#f92672">=</span> { <span style="color:#e6db74">&#39;defaultServiceType&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;./defaultServiceType&#39;</span>) }
-    }
-    
-    <span style="color:#a6e22e">getService</span>(<span style="color:#a6e22e">serviceType</span>) {
-        <span style="color:#66d9ef">try</span> {
-            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">serviceTypes</span>[<span style="color:#a6e22e">serviceType</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">`./</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">serviceType</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>)
-            
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">serviceTypes</span>[<span style="color:#a6e22e">serviceType</span>];
-        } <span style="color:#66d9ef">catch</span>(<span style="color:#a6e22e">ex</span>) {
-            <span style="color:#75715e">//log error and handle default scenario
-</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">ex</span>);
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">serviceTypes</span>[<span style="color:#e6db74">&#39;defaultServiceType&#39;</span>];
-        }
-    }
-}
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">//api.js
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">api</span>(<span style="color:#a6e22e">options</span>) {
-    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Calling api service type&#34;</span>);
-    <span style="color:#75715e">//code to handle api svc type stuff 
-</span><span style="color:#75715e"></span>}
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">//lambda.js
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">lambda</span>(<span style="color:#a6e22e">options</span>) {
-    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Calling lambda service type&#34;</span>);
-    <span style="color:#75715e">//code to handle lambda svc type stuff 
-</span><span style="color:#75715e"></span>}
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">//website.js
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">website</span>(<span style="color:#a6e22e">options</span>) {
-    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Calling website service type&#34;</span>);
-    <span style="color:#75715e">//code to handle website svc type stuff 
-</span><span style="color:#75715e"></span>}
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">//defaultSvcType.js
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">defaultSvcType</span>() {
-    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Calling default service type handler&#34;</span>);
-    <span style="color:#75715e">//your logic to handle default/error case
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>This approach provides lot of benefits:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">//index.js
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">ServiceFactory</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;./ServiceFactory&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">svcFactory</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ServiceFactory</span>();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">options</span> <span style="color:#f92672">=</span> { <span style="color:#e6db74">&#39;name&#39;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Service Name&#39;</span> };
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">generateService</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">svcFactory</span>.<span style="color:#a6e22e">getService</span>(<span style="color:#e6db74">&#39;api&#39;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//more logic here and late execution
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">generateService</span>(<span style="color:#a6e22e">options</span>);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">//ServiceFactory.js
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">/* get the service given the type and options using factory*/</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ServiceFactory</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">constructor</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">serviceTypes</span> <span style="color:#f92672">=</span> { <span style="color:#e6db74">&#39;defaultServiceType&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;./defaultServiceType&#39;</span>) }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">getService</span>(<span style="color:#a6e22e">serviceType</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">serviceTypes</span>[<span style="color:#a6e22e">serviceType</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">`./</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">serviceType</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>)
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">serviceTypes</span>[<span style="color:#a6e22e">serviceType</span>];
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">catch</span>(<span style="color:#a6e22e">ex</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//log error and handle default scenario
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">ex</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">serviceTypes</span>[<span style="color:#e6db74">&#39;defaultServiceType&#39;</span>];
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">//api.js
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">api</span>(<span style="color:#a6e22e">options</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Calling api service type&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//code to handle api svc type stuff 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">//lambda.js
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">lambda</span>(<span style="color:#a6e22e">options</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Calling lambda service type&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//code to handle lambda svc type stuff 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">//website.js
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">website</span>(<span style="color:#a6e22e">options</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Calling website service type&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//code to handle website svc type stuff 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">//defaultSvcType.js
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">defaultSvcType</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Calling default service type handler&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//your logic to handle default/error case
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>This approach provides lot of benefits:</p>
 <ul>
 <li>Code is easy to maintain as you don’t have to change the factory if you add or delete a new service. It just works!</li>
 <li>Code is more concise as the logic is abstracted out. Also, this is more efficient as it’s a lookup(hash).</li>
@@ -241,77 +241,77 @@
 <h1 id="builder-pattern-with-classes">Builder pattern (with classes)</h1>
 <p>Now that we have looked at one pattern, lets take it to another level and see how we will use it in real world using the builder pattern. Builder pattern is used to separate the complexities of the creation logic from the final representation.</p>
 <p>In this section I will construct a template(bundle) (eg. a website with api or a api with another lambda) as in real world it is very often that we use templates to bundle our services. I have extended the previous example and below is how to use a builder pattern with classes in combination with object mapping similar to factory pattern we saw earlier.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript">
-<span style="color:#75715e">//index.js
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">ServerlessTemplateBuilder</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;./ServerlessTemplateBuilder&#39;</span>);
-<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">serverlessBuilder</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ServerlessTemplateBuilder</span>(<span style="color:#e6db74">&#39;E2EWebsite&#39;</span>);
-<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">options</span> <span style="color:#f92672">=</span> {
-    <span style="color:#e6db74">&#39;website&#39;</span><span style="color:#f92672">:</span> {
-        <span style="color:#e6db74">&#39;title&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;My website&#39;</span>
-    }, <span style="color:#e6db74">&#39;api&#39;</span><span style="color:#f92672">:</span> {
-        <span style="color:#e6db74">&#39;resouce&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;MyResource&#39;</span>
-    }
-};
-<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">builder</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">serverlessBuilder</span>.<span style="color:#a6e22e">getBuilder</span>();
-<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">res</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">serverlessBuilder</span>.<span style="color:#a6e22e">construct</span>(<span style="color:#a6e22e">builder</span>, <span style="color:#a6e22e">options</span>);
-<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">res</span>);
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">//ServerlessTemplateBuilder.js
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ServerlessTemplateBuilder</span> {
-    <span style="color:#a6e22e">constructor</span>(<span style="color:#a6e22e">type</span>) {  
-        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">type</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">type</span>;
-        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">serverlessTemplateType</span> <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;default&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">`./DefaultTemplateBuilder`</span>)};
-    }
-
-    <span style="color:#75715e">/* return the right builder based on type */</span>
-    <span style="color:#a6e22e">getBuilder</span>() {
-        <span style="color:#66d9ef">try</span> {
-            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">serverlessTemplateType</span>[<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">type</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">`./</span><span style="color:#e6db74">${</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">type</span><span style="color:#e6db74">}</span><span style="color:#e6db74">TemplateBuilder`</span>)
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">serverlessTemplateType</span>[<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">type</span>];
-        } <span style="color:#66d9ef">catch</span>(<span style="color:#a6e22e">ex</span>) {
-            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">ex</span>.<span style="color:#a6e22e">message</span>);
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">serverlessTemplateType</span>[<span style="color:#e6db74">&#39;default&#39;</span>];
-        }
-    };
-
-    <span style="color:#75715e">/* constructs (builds) the content given the options for the right builder */</span>
-    <span style="color:#a6e22e">construct</span>(<span style="color:#a6e22e">builder</span>, <span style="color:#a6e22e">options</span>) {
-        <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">serverlessContent</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">builder</span>().<span style="color:#a6e22e">build</span>(<span style="color:#a6e22e">options</span>);
-        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">serverlessContent</span>;
-    };
-}
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">//E2EWebsiteTemplateBuilder.js
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">E2EWebsiteTemplateBuilder</span> {
-    <span style="color:#a6e22e">constructor</span>() {
-        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">services</span> <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;website&#39;</span>, <span style="color:#e6db74">&#39;api&#39;</span>];
-    }
-    
-    <span style="color:#a6e22e">build</span>(<span style="color:#a6e22e">options</span>) {
-        <span style="color:#75715e">//more logic specific to website and api
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">services</span>.<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">service</span> =&gt; ({[<span style="color:#a6e22e">service</span>]<span style="color:#f92672">:</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">`./</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">service</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>)(<span style="color:#a6e22e">options</span>[<span style="color:#a6e22e">service</span>])}));
-    }
-}
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">//ApiWithCronTemplateBuilder.js
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ApiWithCronTemplateBuilder</span> {
-    <span style="color:#a6e22e">constructor</span>() {
-        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">services</span> <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;lambda&#39;</span>, <span style="color:#e6db74">&#39;api&#39;</span>];
-    }
-    
-    <span style="color:#a6e22e">build</span>(<span style="color:#a6e22e">options</span>) {
-        <span style="color:#75715e">//more logic specific to api and lambda with cron job
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">services</span>.<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">service</span> =&gt; ({[<span style="color:#a6e22e">service</span>]<span style="color:#f92672">:</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">`./</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">service</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>)(<span style="color:#a6e22e">options</span>[<span style="color:#a6e22e">service</span>])}));
-    }
-}
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">//DefaultTemplateBuilder.js
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DefaultTemplateBuilder</span> {
-    <span style="color:#a6e22e">constructor</span>() {
-        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">services</span> <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;website&#39;</span>];
-    }
-    
-    <span style="color:#a6e22e">build</span>(<span style="color:#a6e22e">options</span>) {
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">services</span>.<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">service</span> =&gt; ({[<span style="color:#a6e22e">service</span>]<span style="color:#f92672">:</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">`./</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">service</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>)(<span style="color:#a6e22e">options</span>)}));
-    }
-}
-</code></pre></div><p>Benefits of this approach:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//index.js
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">ServerlessTemplateBuilder</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;./ServerlessTemplateBuilder&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">serverlessBuilder</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ServerlessTemplateBuilder</span>(<span style="color:#e6db74">&#39;E2EWebsite&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">options</span> <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;website&#39;</span><span style="color:#f92672">:</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;title&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;My website&#39;</span>
+</span></span><span style="display:flex;"><span>    }, <span style="color:#e6db74">&#39;api&#39;</span><span style="color:#f92672">:</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;resouce&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;MyResource&#39;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">builder</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">serverlessBuilder</span>.<span style="color:#a6e22e">getBuilder</span>();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">res</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">serverlessBuilder</span>.<span style="color:#a6e22e">construct</span>(<span style="color:#a6e22e">builder</span>, <span style="color:#a6e22e">options</span>);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">res</span>);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">//ServerlessTemplateBuilder.js
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ServerlessTemplateBuilder</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">constructor</span>(<span style="color:#a6e22e">type</span>) {  
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">type</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">type</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">serverlessTemplateType</span> <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;default&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">`./DefaultTemplateBuilder`</span>)};
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* return the right builder based on type */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">getBuilder</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">serverlessTemplateType</span>[<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">type</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">`./</span><span style="color:#e6db74">${</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">type</span><span style="color:#e6db74">}</span><span style="color:#e6db74">TemplateBuilder`</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">serverlessTemplateType</span>[<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">type</span>];
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">catch</span>(<span style="color:#a6e22e">ex</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">ex</span>.<span style="color:#a6e22e">message</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">serverlessTemplateType</span>[<span style="color:#e6db74">&#39;default&#39;</span>];
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* constructs (builds) the content given the options for the right builder */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">construct</span>(<span style="color:#a6e22e">builder</span>, <span style="color:#a6e22e">options</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">serverlessContent</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">builder</span>().<span style="color:#a6e22e">build</span>(<span style="color:#a6e22e">options</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">serverlessContent</span>;
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">//E2EWebsiteTemplateBuilder.js
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">E2EWebsiteTemplateBuilder</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">constructor</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">services</span> <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;website&#39;</span>, <span style="color:#e6db74">&#39;api&#39;</span>];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">build</span>(<span style="color:#a6e22e">options</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//more logic specific to website and api
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">services</span>.<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">service</span> =&gt; ({[<span style="color:#a6e22e">service</span>]<span style="color:#f92672">:</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">`./</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">service</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>)(<span style="color:#a6e22e">options</span>[<span style="color:#a6e22e">service</span>])}));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">//ApiWithCronTemplateBuilder.js
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ApiWithCronTemplateBuilder</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">constructor</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">services</span> <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;lambda&#39;</span>, <span style="color:#e6db74">&#39;api&#39;</span>];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">build</span>(<span style="color:#a6e22e">options</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//more logic specific to api and lambda with cron job
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">services</span>.<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">service</span> =&gt; ({[<span style="color:#a6e22e">service</span>]<span style="color:#f92672">:</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">`./</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">service</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>)(<span style="color:#a6e22e">options</span>[<span style="color:#a6e22e">service</span>])}));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">//DefaultTemplateBuilder.js
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DefaultTemplateBuilder</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">constructor</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">services</span> <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;website&#39;</span>];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">build</span>(<span style="color:#a6e22e">options</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">services</span>.<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">service</span> =&gt; ({[<span style="color:#a6e22e">service</span>]<span style="color:#f92672">:</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">`./</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">service</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>)(<span style="color:#a6e22e">options</span>)}));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Benefits of this approach:</p>
 <ul>
 <li>Similar benefits like previous example we saw.</li>
 <li>With this pattern we have delegated the construction(build) of template or implementation to it&rsquo;s own class/module/function and this provides a good separation of concerns.</li>
@@ -329,7 +329,7 @@
             </div>
             <div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -1300,7 +1300,7 @@
             </div>
             <div class="content-right">
 			          
-                  <a class="footer-links" href="https://tmo-oss-getinvite.herokuapp.com/" target="_blank"><i class="fa fa-slack"></i></a>
+                  <a class="footer-links" href="https://gitter.im/tmobile/" target="_blank"><i class="fa fa-gitter"></i></a>
                 
                   <a class="footer-links" href="https://www.youtube.com/playlist?list=PL0mz2nejZ-DgH0XsbYDrKPbeMiEJYWqUg" target="_blank"><i class="fa fa-youtube"></i></a>
                 
@@ -1309,7 +1309,7 @@
         <div class="mobile_version_content" style="width: 100%;">
             
                 <div class="mobile_version margin">
-                    <a class="footer-links" href="https://tmo-oss-getinvite.herokuapp.com/" target="_blank"><i style="min-width: 34px;" class="fa fa-slack"></i></a>
+                    <a class="footer-links" href="https://gitter.im/tmobile/" target="_blank"><i style="min-width: 34px;" class="fa fa-gitter"></i></a>
                 </div>
             
                 <div class="mobile_version margin">
