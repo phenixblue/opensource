@@ -24,6 +24,9 @@ navigation:
       - icon: fa-gitter
         href: "https://gitter.im/tmobile/"
         class: "fa-brands"
+      - icon: fa-youtube
+        href: "https://www.youtube.com/playlist?list=PL0mz2nejZ-DgH0XsbYDrKPbeMiEJYWqUg"
+        class: "youtube"
       # - icon: fa-slack
       #   href: ""
       #   class: "slack"
@@ -33,6 +36,3 @@ navigation:
       # - icon: fa-facebook squared
       #   href: "https://www.facebook.com"
       #   class: "facebook"
-      # - icon: fa-youtube
-      #  href: "https://www.youtube.com/playlist?list=PL0mz2nejZ-DgH0XsbYDrKPbeMiEJYWqUg"
-      #  class: "youtube"
