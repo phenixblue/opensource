@@ -21,6 +21,9 @@ navigation:
         class: "privacy"
   social:
     links:
+      - icon: fa-gitter
+        href: "https://gitter.im/tmobile/"
+        class: "fa-brands"
       # - icon: fa-slack
       #   href: ""
       #   class: "slack"

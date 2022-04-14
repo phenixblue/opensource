@@ -3,7 +3,7 @@
     <div class="blog-web-content">
         <div class="blog-topic"><h4><i class="fi-megaphone"></i> <div class="blog-topic-share">Recent Posts</div></h4></div>
         {{ range first 10 (where .Site.Pages "Section" "blog") }}
-		{{ if not (eq .URL "/posts/") }}<div class="blog-year"><a href="{{ .Permalink }}">{{ .Title }}</a></div>{{ end }}
+		{{ if not (eq .Page.Permalink "/posts/") }}<div class="blog-year"><a href="{{ .Permalink }}">{{ .Title }}</a></div>{{ end }}
 		{{ end }}
     </div>
 
