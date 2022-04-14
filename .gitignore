@@ -4,3 +4,4 @@ config.toml
 .DS_Store
 /.idea
 themes/tmo-oss-theme/static/js/mock-data.js
+.hugo_build.lock
